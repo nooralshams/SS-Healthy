@@ -1,0 +1,62 @@
+<?php
+// Catalogue modifiable du composeur de bowl.
+$BOWL_CONFIG = [
+    'sizes' => [
+        'small' => ['label' => 'Small', 'units' => 3, 'price' => 2500],
+        'medium' => ['label' => 'Medium', 'units' => 5, 'price' => 3000],
+        'large' => ['label' => 'Large', 'units' => 7, 'price' => 3500],
+    ],
+    'bases' => [
+        'patate-douce' => 'Patate douce',
+        'pomme-de-terre-vapeur' => 'Pomme de terre vapeur',
+        'pates-completes' => 'Pâtes complètes',
+         'fonio' => 'Fonio',
+        'riz-basmati' => 'Riz basmati',
+        'riz-complet' => 'Riz complet',
+    ],
+    'proteins' => [
+        'boeuf-maigre' => ['label' => 'Bœuf maigre', 'premium' => false],
+        'lentilles' => ['label' => 'Lentilles', 'premium' => false],
+        'poisson-blanc' => ['label' => 'Poisson blanc', 'premium' => false],
+        'poulet-grille' => ['label' => 'Poulet grillé', 'premium' => false],
+        'steak-hache' => ['label' => 'Steak haché', 'premium' => false],
+        'oeufs' => ['label' => 'Œufs', 'premium' => false],
+        'crevettes' => ['label' => 'Crevettes', 'premium' => true],
+        'poulet-roti' => ['label' => 'Poulet rôti', 'premium' => true],
+        'dorade' => ['label' => 'Dorade', 'premium' => true],
+        'thon' => ['label' => 'Thon', 'premium' => true],
+    ],
+    'vegetables' => [
+        'avocat' => 'Avocat',
+       
+        'carottes' => 'Carottes',
+        'carottes-rapees' => 'Carottes râpées',
+        'concombres' => 'Concombres',
+        'coriandre' => 'Coriandre',
+        'courgettes' => 'Courgettes',
+        'epinards' => 'Épinards',
+        'haricots-verts' => 'Haricots verts', 
+        'mais' => 'Maïs',
+        'oignon-caramelise' => 'Oignon caramélisé',
+        'patate-douce' => 'Patate douce',
+        'patate-douce-rotie' => 'Patate douce rôtie / frites',
+        'persil' => 'Persil',
+        'petits-pois' => 'Petits pois',
+        'poivrons' => 'Poivrons',
+        'pomme-de-terre' => 'Pomme de terre',
+         'haricots-noirs' => 'Haricots noirs',
+        'salade-verte' => 'Salade verte',
+        'tomates' => 'Tomates',
+        'tomates-cerises' => 'Tomates cerises',
+    ],
+    'sauces' => [
+        'citron' => 'Sauce citron',
+        'piquante' => 'Sauce piquante',
+        'yaourt' => 'Sauce yaourt',
+    ],
+    'extras' => [
+        'extra_unit_price' => 500,
+        'premium_protein_price' => 700,
+        'max_extra_units' => 20,
+    ],
+];

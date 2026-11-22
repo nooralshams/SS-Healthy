@@ -1,0 +1,73 @@
+/* Navigation de l'administration */
+.admin-header .nav-conteneur {
+    max-width: 1320px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 24px;
+}
+
+.admin-header .logo {
+    white-space: nowrap;
+}
+
+.admin-header .nav-principale {
+    flex-wrap: nowrap;
+    gap: clamp(10px, 1.5vw, 22px);
+}
+
+.admin-header .nav-principale a,
+.admin-header .nav-actions a {
+    white-space: nowrap;
+    font-size: .9rem;
+}
+
+.admin-header .nav-actions {
+    gap: 16px;
+}
+
+.admin-messages-list { display: grid; gap: 16px; }
+.admin-message { padding: 20px; border: 1px solid #E4EADF; border-radius: 8px; background: #fff; }
+.admin-message-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.admin-message-heading h2 { color: var(--vert-fonce); font-size: 1.1rem; }
+.admin-message time { color: #6A7C70; font-size: .82rem; }
+.admin-message > p { margin-top: 8px; }
+.admin-message-body { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* Espace de contenu des pages admin */
+.admin-header + main .conteneur {
+    width: 100%;
+    max-width: 1180px;
+}
+
+/* Tableau admin */
+.admin-header + main .tableau {
+    width: 100%;
+}
+
+.admin-header + main .tableau th,
+.admin-header + main .tableau td {
+    padding: 14px 16px;
+}
+
+/* Navigation et tableau sur petit écran */
+@media (max-width: 1000px) {
+    .admin-header .nav-conteneur {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px 24px;
+    }
+
+    .admin-header .nav-principale,
+    .admin-header .nav-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 700px) {
+    .admin-header + main .tableau {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}  
