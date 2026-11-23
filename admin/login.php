@@ -9,6 +9,7 @@
 $titre_page = 'Connexion administrateur';
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/fonctions.php';
+require_once __DIR__ . '/../includes/connexion_functions.php';
 
 // Un admin déjà connecté va directement au tableau de bord
 if (est_admin()) {
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($utilisateur && (int) $utilisateur['bloque'] === 1) {
             $erreur = 'Ce compte administrateur est bloqué.';
         } elseif ($utilisateur && password_verify($mot_de_passe, $utilisateur['mot_de_passe'])) {
-            $pdo->prepare('UPDATE utilisateurs SET tentatives_connexion = 0 WHERE id = ?')->execute([(int) $utilisateur['id']]);
+            reinitialiser_tentatives_connexion($pdo, (int) $utilisateur['id']);
             session_regenerate_id(true);
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             $_SESSION['utilisateur_id'] = (int) $utilisateur['id'];
@@ -51,18 +52,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             header('Location: dashboard.php');
             exit;
+        } else {
+            if ($utilisateur) {
+                $vient_d_etre_bloque = enregistrer_echec_connexion($pdo, (int) $utilisateur['id']);
+                $erreur = $vient_d_etre_bloque
+                    ? 'Trop de tentatives échouées : ce compte administrateur a été bloqué.'
+                    : 'Identifiants administrateur incorrects.';
+            } else {
+                $erreur = 'Identifiants administrateur incorrects.';
+            }
         }
-
-        if ($utilisateur) {
-            $pdo->prepare(
-                'UPDATE utilisateurs
-                 SET tentatives_connexion = tentatives_connexion + 1,
-                     bloque = CASE WHEN tentatives_connexion + 1 >= 5 THEN 1 ELSE bloque END
-                 WHERE id = ?'
-            )->execute([(int) $utilisateur['id']]);
-        }
-
-        $erreur = 'Identifiants administrateur incorrects.';
     }
 }
 ?>
