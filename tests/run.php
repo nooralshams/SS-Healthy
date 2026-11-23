@@ -220,6 +220,27 @@ try {
     $commandeEnregistree = $stmt->fetch();
     $assert($commandeEnregistree['mode_paiement'] === 'wave' && $commandeEnregistree['creneau'] === 'Sous 1 h' && $commandeEnregistree['statut'] === 'en_attente' && (int) $commandeEnregistree['total'] === $prixAttendu, 'Le mode de paiement, le délai, le statut en attente ou le total du checkout est incorrect.');
 
+    $bowlsSeuls = reconstruire_articles_panier($pdo, [
+        'bowl_seul' => [
+            'type' => 'bowl_personnalise',
+            'nom' => 'Bowl personnalisé (Small)',
+            'prix' => $bowl['price'],
+            'description' => $bowl['composition'],
+            'quantite' => 1,
+        ],
+    ]);
+    $assert(count($bowlsSeuls['articles']) === 1 && $bowlsSeuls['total'] === $bowl['price'], 'Un panier composé uniquement de bowls doit être reconstruit avec son total.');
+    $commandeBowlsSeuls = enregistrer_commande($pdo, [
+        'utilisateur_id' => $userId,
+        'creneau' => 'Sous 1 h',
+        'mode' => 'sur_place',
+        'mode_paiement' => 'especes',
+        'adresse_livraison' => null,
+        'total' => $bowlsSeuls['total'],
+    ], $bowlsSeuls['articles']);
+    $assert((int) $pdo->query("SELECT COUNT(*) FROM details_commande WHERE commande_id = {$commandeBowlsSeuls}")->fetchColumn() === 0, 'Un panier bowl-only ne doit pas créer de détail de plat catalogue.');
+    $assert((int) $pdo->query("SELECT COUNT(*) FROM details_commande_bowls WHERE commande_id = {$commandeBowlsSeuls}")->fetchColumn() === 1, 'Un panier bowl-only doit enregistrer son détail de bowl.');
+
     $nombreCommandesAvantAnnulation = (int) $pdo->query('SELECT COUNT(*) FROM commandes')->fetchColumn();
     $annulationDetectee = false;
     try {
