@@ -59,7 +59,7 @@ IMC = 56,6 / 1,75² = 18,48, arrondi à 18,5.
 
 Résultat attendu : corpulence normale. Une valeur non arrondie de 18,49 peut donc être affichée comme 18,5 et classée comme normale ; cela évite une contradiction entre l’arrondi affiché et la catégorie.
 
-Ajouter au tableau 22 une ligne de test par catégorie `determinerProfil` :
+Le tableau 22 doit présenter une ligne de test par cas de `determinerProfil` :
 
 | Cas | Valeur IMC | Profil attendu |
 |---|---:|---|
@@ -70,9 +70,11 @@ Ajouter au tableau 22 une ligne de test par catégorie `determinerProfil` :
 | T5 | 29,9 | Surpoids |
 | T6 | 30,0 | Obésité |
 
-Ajouter une ligne pour l’annulation de transaction : insérer une ligne de panier contenant un plat inexistant et vérifier qu’aucune commande ni aucun détail n’est enregistré.
+Ces six cas sont couverts par `tests/test_fonctions.php`. Le test de frontière 56,6 kg / 175 cm est également présent dans `tests/run.php`.
 
-Ajouter une ligne pour le créneau : soumettre `Express` ou `Sous 30 min` moins de 45 minutes avant la préparation et vérifier le rejet côté serveur.
+`tests/run.php` vérifie l’annulation d’une transaction lorsqu’un plat inexistant est soumis et vérifie que les créneaux `Express` et `Sous 30 min` sont refusés côté serveur. Un panier composé uniquement d’un bowl personnalisé est aussi testé.
+
+Les résultats de test à reporter dans le mémoire doivent être ceux de l’exécution finale avant dépôt; ne pas transformer ces tests automatisés en résultats d’enquête.
 
 ## 7. Sécurité
 
@@ -82,23 +84,26 @@ Chaque formulaire POST contient un jeton CSRF généré dans la session PHP :
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
-```
-
-La requête vérifie ensuite le jeton avec `hash_equals()`. Le créneau et le mode de retrait sont également revalidés côté serveur dans `commande.php` avant l’appel transactionnel.
-
-Pour les images envoyées, le serveur doit vérifier l’existence du téléchargement, sa taille, son type réel et sa dimension :
-
-```php
-if (!is_uploaded_file($_FILES['image']['tmp_name'])) {
-    throw new RuntimeException('Téléversement invalide.');
-}
-$info = getimagesize($_FILES['image']['tmp_name']);
-if ($info === false || !in_array($info['mime'], ['image/jpeg', 'image/png'], true)) {
-    throw new RuntimeException('Format d’image refusé.');
+$csrf_token = $_POST['csrf_token'] ?? '';
+if (!is_string($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+    http_response_code(419);
+    exit('Votre session de formulaire a expiré.');
 }
 ```
 
-Le fichier doit ensuite être enregistré sous un nom aléatoire et une extension autorisée, hors du chemin exécutable.
+Le code vérifie le jeton avec `hash_equals()` et renvoie le statut HTTP 419 en cas d’échec. Le créneau et le mode de retrait sont également revalidés côté serveur dans `commande.php` avant l’appel transactionnel.
+
+À la vérification du code, `admin/plats.php` ne comporte pas de téléversement d’image. Le contrôle du type MIME, de l’extension, de la taille et le renommage ne peuvent donc pas être présentés comme une fonctionnalité réalisée. Si l’ajout d’images est prévu, implémenter et tester ces contrôles avant de l’annoncer.
+
+Le bandeau présent dans `includes/header.php` concerne les horaires; aucun bandeau d’actualité n’a été identifié. Ne pas le présenter comme une actualité dynamique.
+
+Le tableau de bord admin regroupe les commandes par objectif client. Les captures de réalisation doivent montrer cette répartition avec des données de test lisibles.
+
+Les plats dont `disponible` vaut 0 sont exclus du menu par la requête de `menu.php`. Ne pas affirmer qu’un plat épuisé reste affiché dans le menu.
+
+Aucun calcul des besoins énergétiques selon Mifflin–St Jeor n’a été identifié dans le code examiné. Retirer cette affirmation ou implémenter et tester la formule.
+
+Le fichier `diagrammes_SSHealthy.drawio` contient des diagrammes de conception, mais pas de diagrammes d’état distincts pour le cycle de commande et celui d’abonnement. Ajouter ces diagrammes si le mémoire les annonce.
 
 ## Préparation de la soutenance
 
@@ -145,7 +150,7 @@ Par exemple, 18,49 est arrondi à 18,5 et classé `normal`, conformément à la 
 |---|---|
 | API | Application Programming Interface |
 | CSRF | Cross-Site Request Forgery |
-| DER | Diplôme d’études supérieures spécialisées en informatique, à confirmer selon la nomenclature de l’établissement |
+| DER | Diagramme Entité-Relation |
 | JSON | JavaScript Object Notation |
 | MoSCoW | Must, Should, Could, Won’t |
 | PWA | Progressive Web App |
@@ -154,9 +159,9 @@ Les sigles AJAX, MNT et PME ne sont pas retenus.
 
 ## Fonctionnalités à ne conserver dans le texte qu’avec une preuve
 
-- Blocage après cinq échecs : code présent dans `connexion.php`, `admin/login.php` et la colonne `tentatives_connexion`; joindre un test T3 ou retirer l’affirmation.
-- Bandeau d’actualité : aucun composant dynamique vérifié n’est disponible; retirer du périmètre annoncé ou ajouter une implémentation.
-- Répartition des commandes par objectif : présentée dans le tableau de bord administrateur; joindre une capture avec données.
+- Blocage après cinq échecs : le helper commun et `tests/test_blocage_connexion.php` testent le seuil de cinq échecs; `connexion.php` et `admin/login.php` utilisent ce helper. Joindre le résultat du test et la capture correspondante.
+- Bandeau d’actualité : non trouvé; le bandeau de `includes/header.php` affiche les horaires. Retirer cette fonctionnalité du périmètre annoncé ou l’implémenter.
+- Répartition des commandes par objectif : la requête et l’affichage sont présents dans le tableau de bord administrateur; joindre une capture avec des données de test.
 - Plats épuisés restant visibles : retirer cette affirmation si le menu continue d’appliquer `WHERE p.disponible = 1`.
 - Calcul des besoins énergétiques selon Mifflin–St Jeor : aucune implémentation vérifiée; retirer ou ajouter le code et les tests.
 
