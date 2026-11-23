@@ -3,6 +3,7 @@ require_once __DIR__ . '/../includes/bowl_config.php';
 require_once __DIR__ . '/../includes/bowl_functions.php';
 require_once __DIR__ . '/../includes/commande_functions.php';
 require_once __DIR__ . '/../includes/fonctions.php';
+require_once __DIR__ . '/../admin/includes/admin.php';
 
 $assertions = 0;
 $assert = static function ($condition, string $message) use (&$assertions): void {
@@ -138,6 +139,21 @@ try {
     $assert(determinerProfil(30.0) === 'obesite', 'La classification 30 doit être obésité.');
     $assert(!creneau_autorise('Express') && !creneau_autorise('Sous 30 min'), 'Les créneaux envoyés à moins de 45 minutes doivent être refusés.');
     $assert(creneau_autorise('Sous 1 h'), 'Un créneau d’au moins 45 minutes doit être accepté.');
+    $transitionsCommandes = transitions_statuts_commande();
+    $transitionsAbonnements = transitions_statuts_abonnement();
+    $assert(transition_statut_autorisee('en_attente', 'confirmee', $transitionsCommandes), 'Une commande en attente doit pouvoir être confirmée.');
+    $assert(transition_statut_autorisee('prete', 'livree', $transitionsCommandes), 'Une commande prête doit pouvoir être livrée.');
+    $assert(transition_statut_autorisee('en_preparation', 'annulee', $transitionsCommandes), 'Une commande doit pouvoir être annulée avant sa livraison.');
+    $assert(!transition_statut_autorisee('en_attente', 'prete', $transitionsCommandes), 'Une commande ne doit pas sauter les étapes intermédiaires.');
+    $assert(!transition_statut_autorisee('livree', 'annulee', $transitionsCommandes), 'Une commande livrée doit être terminale.');
+    $assert(!transition_statut_autorisee('annulee', 'confirmee', $transitionsCommandes), 'Une commande annulée doit être terminale.');
+    $assert(transition_statut_autorisee('en_attente', 'actif', $transitionsAbonnements), 'Un abonnement en attente doit pouvoir être activé.');
+    $assert(transition_statut_autorisee('actif', 'termine', $transitionsAbonnements), 'Un abonnement actif doit pouvoir être terminé.');
+    $assert(transition_statut_autorisee('actif', 'annule', $transitionsAbonnements), 'Un abonnement doit pouvoir être annulé avant sa fin.');
+    $assert(!transition_statut_autorisee('en_attente', 'termine', $transitionsAbonnements), 'Un abonnement ne doit pas sauter l’activation.');
+    $assert(!transition_statut_autorisee('termine', 'actif', $transitionsAbonnements), 'Un abonnement terminé doit être terminal.');
+    $assert(!transition_statut_autorisee('annule', 'actif', $transitionsAbonnements), 'Un abonnement annulé doit être terminal.');
+    $assert(!transition_statut_autorisee('en_attente', ['confirmee'], $transitionsCommandes), 'Un statut reçu sous forme de tableau doit être refusé.');
 
     $selection = [
         'size' => 'small',

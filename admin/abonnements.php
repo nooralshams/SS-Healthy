@@ -7,17 +7,35 @@
 $titre_page = 'Gestion des abonnements';
 require_once __DIR__ . '/includes/header.php';
 
-$STATUTS = ['en_attente', 'actif', 'termine', 'annule'];
+$TRANSITIONS = transitions_statuts_abonnement();
 
 // Mise à jour du statut d'un abonnement
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'statut') {
     $abonnement_id = filter_input(INPUT_POST, 'abonnement_id', FILTER_VALIDATE_INT);
     $statut = $_POST['statut'] ?? '';
 
-    if ($abonnement_id && in_array($statut, $STATUTS, true)) {
-        $stmt = $pdo->prepare('UPDATE abonnements SET statut = ? WHERE id = ?');
-        $stmt->execute([$statut, $abonnement_id]);
-        $_SESSION['message_admin'] = 'Le statut de l\'abonnement #' . $abonnement_id . ' a été mis à jour.';
+    if ($abonnement_id) {
+        $stmt = $pdo->prepare('SELECT statut FROM abonnements WHERE id = ?');
+        $stmt->execute([$abonnement_id]);
+        $statutActuel = $stmt->fetchColumn();
+
+        if ($statutActuel === false) {
+            $_SESSION['erreur_admin'] = 'Abonnement introuvable.';
+        } elseif ($statut === $statutActuel) {
+            $_SESSION['erreur_admin'] = 'L’abonnement possède déjà ce statut.';
+        } elseif (transition_statut_autorisee($statutActuel, $statut, $TRANSITIONS)) {
+            $stmt = $pdo->prepare('UPDATE abonnements SET statut = ? WHERE id = ? AND statut = ?');
+            $stmt->execute([$statut, $abonnement_id, $statutActuel]);
+            if ($stmt->rowCount() === 1) {
+                $_SESSION['message_admin'] = 'Le statut de l\'abonnement #' . $abonnement_id . ' a été mis à jour.';
+            } else {
+                $_SESSION['erreur_admin'] = 'Le statut a changé entre-temps. Rechargez la page et réessayez.';
+            }
+        } else {
+            $_SESSION['erreur_admin'] = 'Cette transition de statut d’abonnement n’est pas autorisée.';
+        }
+    } else {
+        $_SESSION['erreur_admin'] = 'Abonnement invalide.';
     }
 
     header('Location: abonnements.php');
@@ -43,6 +61,10 @@ $abonnements = $pdo->query(
         <?php if (!empty($_SESSION['message_admin'])): ?>
             <div class="alerte alerte-succes"><?= e($_SESSION['message_admin']) ?></div>
             <?php unset($_SESSION['message_admin']); ?>
+        <?php endif; ?>
+        <?php if (!empty($_SESSION['erreur_admin'])): ?>
+            <div class="alerte alerte-erreur"><?= e($_SESSION['erreur_admin']) ?></div>
+            <?php unset($_SESSION['erreur_admin']); ?>
         <?php endif; ?>
 
         <?php if (empty($abonnements)): ?>
@@ -79,7 +101,7 @@ $abonnements = $pdo->query(
                                     <input type="hidden" name="action" value="statut">
                                     <input type="hidden" name="abonnement_id" value="<?= (int) $abonnement['id'] ?>">
                                     <select name="statut" onchange="this.form.submit()">
-                                        <?php foreach ($STATUTS as $statut): ?>
+                                        <?php foreach (array_merge([$abonnement['statut']], $TRANSITIONS[$abonnement['statut']] ?? []) as $statut): ?>
                                             <option value="<?= e($statut) ?>" <?= $abonnement['statut'] === $statut ? 'selected' : '' ?>>
                                                 <?= e($statut) ?>
                                             </option>

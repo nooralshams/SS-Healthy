@@ -31,6 +31,33 @@ function libelle_statut_abonnement($statut) {
     return $libelles[$statut] ?? $statut;
 }
 
+/** Statuts accessibles depuis chaque étape du parcours d'une commande. */
+function transitions_statuts_commande(): array {
+    return [
+        'en_attente' => ['confirmee', 'annulee'],
+        'confirmee' => ['en_preparation', 'annulee'],
+        'en_preparation' => ['prete', 'annulee'],
+        'prete' => ['livree', 'annulee'],
+        'livree' => [],
+        'annulee' => [],
+    ];
+}
+
+/** Statuts accessibles depuis chaque étape du parcours d'un abonnement. */
+function transitions_statuts_abonnement(): array {
+    return [
+        'en_attente' => ['actif', 'annule'],
+        'actif' => ['termine', 'annule'],
+        'termine' => [],
+        'annule' => [],
+    ];
+}
+
+/** Indique si le statut demandé est une transition autorisée. */
+function transition_statut_autorisee($courant, $nouveau, array $transitions): bool {
+    return in_array($nouveau, $transitions[$courant] ?? [], true);
+}
+
 /** Nombre d'éléments en attente (pour les badges du menu admin) */
 function nb_en_attente($pdo, $table) {
     $tables_autorisees = ['commandes', 'abonnements'];

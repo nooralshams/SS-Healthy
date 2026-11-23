@@ -7,17 +7,35 @@
 $titre_page = 'Gestion des commandes';
 require_once __DIR__ . '/includes/header.php';
 
-$STATUTS = ['en_attente', 'confirmee', 'en_preparation', 'prete', 'livree', 'annulee'];
+$TRANSITIONS = transitions_statuts_commande();
 
 // Mise à jour du statut d'une commande
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'statut') {
     $commande_id = filter_input(INPUT_POST, 'commande_id', FILTER_VALIDATE_INT);
     $statut = $_POST['statut'] ?? '';
 
-    if ($commande_id && in_array($statut, $STATUTS, true)) {
-        $stmt = $pdo->prepare('UPDATE commandes SET statut = ? WHERE id = ?');
-        $stmt->execute([$statut, $commande_id]);
-        $_SESSION['message_admin'] = 'Le statut de la commande numéro ' . $commande_id . ' a été mis à jour.';
+    if ($commande_id) {
+        $stmt = $pdo->prepare('SELECT statut FROM commandes WHERE id = ?');
+        $stmt->execute([$commande_id]);
+        $statutActuel = $stmt->fetchColumn();
+
+        if ($statutActuel === false) {
+            $_SESSION['erreur_admin'] = 'Commande introuvable.';
+        } elseif ($statut === $statutActuel) {
+            $_SESSION['erreur_admin'] = 'La commande possède déjà ce statut.';
+        } elseif (transition_statut_autorisee($statutActuel, $statut, $TRANSITIONS)) {
+            $stmt = $pdo->prepare('UPDATE commandes SET statut = ? WHERE id = ? AND statut = ?');
+            $stmt->execute([$statut, $commande_id, $statutActuel]);
+            if ($stmt->rowCount() === 1) {
+                $_SESSION['message_admin'] = 'Le statut de la commande numéro ' . $commande_id . ' a été mis à jour.';
+            } else {
+                $_SESSION['erreur_admin'] = 'Le statut a changé entre-temps. Rechargez la page et réessayez.';
+            }
+        } else {
+            $_SESSION['erreur_admin'] = 'Cette transition de statut de commande n’est pas autorisée.';
+        }
+    } else {
+        $_SESSION['erreur_admin'] = 'Commande invalide.';
     }
 
     header('Location: commandes.php');
@@ -75,6 +93,10 @@ if ($commandes) {
             <div class="alerte alerte-succes"><?= e($_SESSION['message_admin']) ?></div>
             <?php unset($_SESSION['message_admin']); ?>
         <?php endif; ?>
+        <?php if (!empty($_SESSION['erreur_admin'])): ?>
+            <div class="alerte alerte-erreur"><?= e($_SESSION['erreur_admin']) ?></div>
+            <?php unset($_SESSION['erreur_admin']); ?>
+        <?php endif; ?>
 
         <?php if (empty($commandes)): ?>
             <div class="carte-formulaire">
@@ -131,7 +153,7 @@ if ($commandes) {
                                     <input type="hidden" name="action" value="statut">
                                     <input type="hidden" name="commande_id" value="<?= (int) $commande['id'] ?>">
                                     <select name="statut" onchange="this.form.submit()">
-                                        <?php foreach ($STATUTS as $statut): ?>
+                                        <?php foreach (array_merge([$commande['statut']], $TRANSITIONS[$commande['statut']] ?? []) as $statut): ?>
                                             <option value="<?= e($statut) ?>" <?= $commande['statut'] === $statut ? 'selected' : '' ?>>
                                                 <?= e($statut) ?>
                                             </option>
