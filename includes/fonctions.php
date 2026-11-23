@@ -36,7 +36,8 @@ function objectifs_autorises($imc) {
         return [];
     }
 
-    $imc = (float) $imc;
+    // Règle unique d'arrondi, identique à determinerProfil() et à mesures_imc.imc (DECIMAL(4,1)).
+    $imc = round((float) $imc, 1);
 
     if ($imc < 18.5) {
         return ['prise_masse', 'diabete'];
@@ -75,7 +76,7 @@ function est_ouvert() {
 
 /** Retourne les délais de retrait/livraison proposés à la commande. */
 function creneaux_disponibles() {
-    return ['Express', 'Sous 30 min', 'Sous 1 h', 'Sous 2 h', 'Pour midi', 'Ce soir'];
+    return ['Sous 1 h', 'Sous 2 h', 'Pour midi', 'Ce soir'];
 }
 
 /** Applique la règle métier : aucun créneau inférieur à 45 minutes. */

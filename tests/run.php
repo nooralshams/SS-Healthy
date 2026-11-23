@@ -128,7 +128,7 @@ try {
     $assert($BOWL_CONFIG['sizes']['small']['price'] === 2500, 'Le tarif Small attendu est 2 500 F CFA.');
     $assert($BOWL_CONFIG['sizes']['medium']['price'] === 3000, 'Le tarif Medium attendu est 3 000 F CFA.');
     $assert($BOWL_CONFIG['sizes']['large']['price'] === 3500, 'Le tarif Large attendu est 3 500 F CFA.');
-    $assert(creneaux_disponibles() === ['Express', 'Sous 30 min', 'Sous 1 h', 'Sous 2 h', 'Pour midi', 'Ce soir'], 'Les délais de commande doivent correspondre aux six choix proposés.');
+    $assert(creneaux_disponibles() === ['Sous 1 h', 'Sous 2 h', 'Pour midi', 'Ce soir'], 'Les délais proposés doivent tous être autorisés côté serveur.');
     $assert(determinerProfil(17.0) === 'insuffisance', 'La classification 17 doit être insuffisance pondérale.');
     $assert(determinerProfil(18.49) === 'normal', '18,49 arrondi à 18,5 doit être corpulence normale.');
     $assert(determinerProfil(56.6 / (1.75 * 1.75)) === 'normal', 'Le cas 56,6 kg / 175 cm doit tester la limite 18,5.');
@@ -206,7 +206,7 @@ try {
 
     $commandeId = enregistrer_commande($pdo, [
         'utilisateur_id' => $userId,
-        'creneau' => 'Express',
+        'creneau' => 'Sous 1 h',
         'mode' => 'livraison',
         'mode_paiement' => 'wave',
         'adresse_livraison' => 'Ziguinchor, test automatisé',
@@ -218,7 +218,7 @@ try {
     $stmt = $pdo->prepare('SELECT mode_paiement, creneau, statut, total FROM commandes WHERE id = ?');
     $stmt->execute([$commandeId]);
     $commandeEnregistree = $stmt->fetch();
-    $assert($commandeEnregistree['mode_paiement'] === 'wave' && $commandeEnregistree['creneau'] === 'Express' && $commandeEnregistree['statut'] === 'en_attente' && (int) $commandeEnregistree['total'] === $prixAttendu, 'Le mode de paiement, le délai, le statut en attente ou le total du checkout est incorrect.');
+    $assert($commandeEnregistree['mode_paiement'] === 'wave' && $commandeEnregistree['creneau'] === 'Sous 1 h' && $commandeEnregistree['statut'] === 'en_attente' && (int) $commandeEnregistree['total'] === $prixAttendu, 'Le mode de paiement, le délai, le statut en attente ou le total du checkout est incorrect.');
 
     $nombreCommandesAvantAnnulation = (int) $pdo->query('SELECT COUNT(*) FROM commandes')->fetchColumn();
     $annulationDetectee = false;
