@@ -82,7 +82,7 @@ Le plat 8 (Crevettes, Patate Douce & Asperges) est à la limite : −29,6 %.
 - **Captures.** 8 captures de l'application en fonctionnement, prises avec des clients et des commandes de démonstration, sont dans `Documents\Memoire\Captures_realisation\`.
 - **Mémoire.** Une copie, `Memoire 1SShealthy Ziguinchor corrigé - avec captures.docx`, a été créée ; l'original n'est pas modifié. Section 6.5 : 7 nouvelles figures, la capture du tableau de bord remplacée par la version actuelle, figures renumérotées de 28 à 40, et numéros de page du sommaire, des listes et de la table finale recalculés par Word. Les maquettes restent en 5.9.
 - **Phrase corrigée en 5.9.** La phrase disait que la répartition des commandes par objectif « ne figure pas » dans le tableau de bord réalisé. Or elle y figure (`admin/dashboard.php`). La phrase a été corrigée dans la copie.
-- **GitHub.** Choix retenu : dépôt privé. Le projet n'a pas encore de dépôt distant ; le lien reste [lien du dépôt GitHub à insérer], surligné dans le mémoire.
+- **GitHub.** Dépôt privé : https://github.com/Nooralshams/SS-Healthy (branche `corrections-encadreur`). Le lien est inséré dans la section 6.5 de la copie du mémoire. Reste à inviter l'encadreur (Settings → Collaborators).
 
 ## Résumé
 
@@ -93,4 +93,4 @@ Le plat 8 (Crevettes, Patate Douce & Asperges) est à la limite : −29,6 %.
 5. Point 4 : `docs/credits_images.md` recense toutes les images, sources à compléter (`4ee748a`).
 6. Affichage du paiement et des commandes admin corrigé (`c612486`) ; tests 44/15/20/89 au vert.
 7. Captures insérées dans une copie du mémoire (figures 28 à 40, pages recalculées).
-8. À fournir : recette du smoothie, sources des images, adresse du dépôt GitHub privé.
+8. À fournir : recette du smoothie, sources des images, invitation de l'encadreur sur le dépôt GitHub privé.
