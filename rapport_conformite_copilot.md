@@ -1,5 +1,7 @@
 # Rapport de conformité — SS’Healthy
 
+> **Mise à jour du 24/11/2026 :** ce rapport est remplacé par `docs/conformite_encadreur.md`. Depuis sa rédaction, le README et le schéma SQL ont été commités (commit `ea35f9e`, sans hash de mot de passe), l’envoi d’images de plats contrôlé a été ajouté (`includes/image_functions.php`, `tests/test_images.php`) et les diagrammes des figures 9, 11, 12 et 13 ont été corrigés dans `diagrammes_SSHealthy.drawio`.
+
 ## Résumé
 
 - Les corrections de code et les tests demandés ont été appliqués; les trois suites passent.

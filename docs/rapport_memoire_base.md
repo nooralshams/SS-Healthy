@@ -93,7 +93,19 @@ if (!is_string($csrf_token) || !hash_equals($_SESSION['csrf_token'], $csrf_token
 
 Le code vérifie le jeton avec `hash_equals()` et renvoie le statut HTTP 419 en cas d’échec. Le créneau et le mode de retrait sont également revalidés côté serveur dans `commande.php` avant l’appel transactionnel.
 
-À la vérification du code, `admin/plats.php` ne comporte pas de téléversement d’image. Le contrôle du type MIME, de l’extension, de la taille et le renommage ne peuvent donc pas être présentés comme une fonctionnalité réalisée. Si l’ajout d’images est prévu, implémenter et tester ces contrôles avant de l’annoncer.
+Les images de plats envoyées depuis `admin/plats.php` sont contrôlées par `includes/image_functions.php` avant d’être enregistrées (extrait simplifié) :
+
+```php
+if ($taille <= 0 || $taille > TAILLE_MAX_IMAGE_PLAT) { /* refus : 2 Mo maximum */ }
+$extension = strtolower(pathinfo($fichier['name'], PATHINFO_EXTENSION));
+if (!isset(EXTENSIONS_IMAGE_PLAT[$extension])) { /* refus : jpg, jpeg, png, webp */ }
+$mime = getimagesize($fichier['tmp_name'])['mime'];          // contenu réel
+// finfo_file() doit donner le même type ; l’extension doit correspondre au contenu
+$nom = 'plat_' . bin2hex(random_bytes(16)) . '.' . $extension; // nom aléatoire
+move_uploaded_file($fichier['tmp_name'], $dossier . '/' . $nom);
+```
+
+Le nom envoyé par l’utilisateur n’est jamais réutilisé, ce qui empêche le dépôt d’un fichier `.php`. Ces règles sont couvertes par `tests/test_images.php` (20 tests).
 
 Le bandeau présent dans `includes/header.php` concerne les horaires; aucun bandeau d’actualité n’a été identifié. Ne pas le présenter comme une actualité dynamique.
 
