@@ -13,9 +13,9 @@
 | Commande | Résultat |
 |---|---|
 | `php tests/test_fonctions.php` | 44 tests, 0 échec |
-| `php tests/test_blocage_connexion.php` | 15 tests, 0 échec |
+| `php tests/test_blocage_connexion.php` | 23 tests, 0 échec |
 | `php tests/test_images.php` | 20 tests, 0 échec |
-| `php tests/run.php` | 89 assertions réussies |
+| `php tests/run.php` | 90 assertions réussies (une vérification CSRF de plus, pour le formulaire de déblocage) |
 
 ## Commits de cette série
 
@@ -36,6 +36,8 @@
 | `e7318fa` | Extra offert du composeur de bowls : fonio au lieu de quinoa |
 | `2745803` | Avertissement santé sur la page IMC |
 | `caf560c` | Questions probables du jury et réponses (`docs/preparation_jury.md`) |
+| `0bfa4a8` | Mise à jour de ce rapport |
+| `c12d6f9` | Déblocage des administrateurs : écran admin, outil en ligne de commande, tests, figure 9 |
 
 ## Améliorations hors critiques
 
@@ -43,6 +45,7 @@ Ces changements ne répondent pas directement à une critique, mais renforcent l
 
 - **Avertissement santé** (`imc.php`, commit `2745803`) : l’application précise qu’elle ne pose aucun diagnostic, que l’IMC ignore la masse musculaire, l’âge et la grossesse, et que les plats « diabète » ne remplacent pas un suivi médical. C’est une réponse prête si le jury pose la question de la responsabilité médicale.
 - **Page d’accueil** (`index.php`, `css/style.css`, commit `182b0c6`) : le titre n’est plus masqué par l’image, et « S’abonner » est mis en avant, y compris sur mobile, où le bouton était auparavant caché.
+- **Déblocage des administrateurs** (`admin/clients.php`, `outils/debloquer_admin.php`, commit `c12d6f9`) : un administrateur bloqué peut être débloqué par un autre ; si c’est le seul, un script en ligne de commande, interdit d’accès web, le débloque. Cela supprime la seule limite technique connue sur la sécurité des connexions.
 - **Fonio offert** (commit `e7318fa`) : seul le libellé affiché change ; les commandes déjà passées gardent leur historique.
 
 ## Tableau de suivi
@@ -54,8 +57,8 @@ Ces changements ne répondent pas directement à une critique, mais renforcent l
 | 3 | Diagramme d’activité (fig. 11) | Corrigée | `diagrammes_SSHealthy.drawio`, page « Activité - commande » (commit `9cfc07b`) : couloirs Client / Serveur, nœuds de début et de fin, décisions. Le créneau est choisi après la connexion, comme dans le code (`commande.php:14-18` redirige vers la connexion). Les libellés « Ajouter un plan » et « Commander la base » sont remplacés par « Ajouter un plat ou un bowl au panier » et « Confirmer la commande » | Remplacer la figure 11 dans le mémoire et mettre le tableau 13 et les maquettes dans le même ordre (connexion, puis créneau) |
 | 4 | Diagramme de séquence (fig. 12) | Corrigée | Page « Séquence - commande » (commit `9cfc07b`) : session PHP placée sur le serveur (messages 3 et 17) ; lecture des prix en base (4-5 et 9-10) ; `BEGIN` (12), `COMMIT` (16), `ROLLBACK` (19) ; fragments `loop` et `alt`. Le message « Vider le panier (session PHP) » porte maintenant le numéro 17, car les messages ont été renumérotés | Remplacer la figure 12 dans le mémoire |
 | 5 | Diagramme de classes (fig. 13) | Corrigée | Page « Diagramme de classes » (commit `9cfc07b`) : association `Utilisateur` 0..* — 1 `Objectif` (énumération, comme l’ENUM en base) ; `mode_retrait`, `disponible`, `poids`, `taille` présents ; attributs repris de `bd/zig_healthy_db.sql` et `bd/migration_imc.sql`. La multiplicité 1..* est placée entre `Commande` et `LigneCommande`, classe abstraite dont héritent `DetailsCommande` et `DetailBowl` | Remplacer la figure 13 dans le mémoire et justifier ce choix : une commande composée uniquement de bowls n’a aucune ligne `details_commande` (cas testé dans le commit `26dd1ab`), donc 1..* directement vers `DetailsCommande` serait faux |
-| 6 | Diagramme de cas d’utilisation (fig. 9) | Corrigée | Page « Cas d’utilisation » (commit `9cfc07b`) : cadre du système, généralisation Client connecté → Visiteur, cas Gérer le panier, Gérer son profil, Gérer les catégories, Consulter le tableau de bord, Se déconnecter, et Administrateur relié à Se connecter | Remplacer la figure 9 dans le mémoire |
-| 7 | Fonctionnalités non prouvées | Corrigée (preuves), Rédigée (retraits) | Blocage : `includes/connexion_functions.php:8` (`SEUIL_BLOCAGE_CONNEXION = 5`) et `tests/test_blocage_connexion.php` (15/15). Répartition par objectif : `admin/dashboard.php:16-19, 72`. Absents du code : bandeau d’actualité (seul `includes/header.php:57` affiche les horaires), plats épuisés visibles (`menu.php:25` filtre sur `disponible = 1`), Mifflin-St Jeor. Consignes de retrait : `docs/rapport_memoire_base.md` l. 172-178 | Dans le mémoire, retirer le bandeau d’actualité, les plats épuisés visibles et Mifflin-St Jeor. Joindre la sortie du test de blocage et une capture du tableau de bord |
+| 6 | Diagramme de cas d’utilisation (fig. 9) | Corrigée | Page « Cas d’utilisation » (commit `9cfc07b`) : cadre du système, généralisation Client connecté → Visiteur, cas Gérer le panier, Gérer son profil, Gérer les catégories, Consulter le tableau de bord, Se déconnecter, et Administrateur relié à Se connecter. Le cas « Débloquer un compte » a été ajouté avec l’écran de déblocage (commit `c12d6f9`) | Remplacer la figure 9 dans le mémoire |
+| 7 | Fonctionnalités non prouvées | Corrigée (preuves), Rédigée (retraits) | Blocage : `includes/connexion_functions.php:10` (`SEUIL_BLOCAGE_CONNEXION = 5`) et `tests/test_blocage_connexion.php` (23/23, déblocage compris). Répartition par objectif : `admin/dashboard.php:16-19, 72`. Absents du code : bandeau d’actualité (seul `includes/header.php:57` affiche les horaires), plats épuisés visibles (`menu.php:25` filtre sur `disponible = 1`), Mifflin-St Jeor. Consignes de retrait : `docs/rapport_memoire_base.md` l. 172-178 | Dans le mémoire, retirer le bandeau d’actualité, les plats épuisés visibles et Mifflin-St Jeor. Joindre la sortie du test de blocage et une capture du tableau de bord |
 | 8 | Hypothèse 2 « non tranchée » | Rédigée | `docs/rapport_memoire_base.md` l. 27-29 | Reporter dans le mémoire |
 | 9 | Fourchette de prix comme hypothèse à tester | Rédigée | `docs/rapport_memoire_base.md` l. 21 | Reporter dans le mémoire |
 | 10 | Deux limites de l’enquête (3.4) | Rédigée | `docs/rapport_memoire_base.md` l. 17-19 | Reporter dans le mémoire |
