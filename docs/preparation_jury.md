@@ -76,10 +76,10 @@ Toutes les requêtes qui reçoivent des données utilisateur sont des requêtes 
 C’est une attaque où un autre site fait envoyer un formulaire à votre place. Chaque formulaire contient un jeton aléatoire stocké en session ; le serveur le compare avec `hash_equals()` et refuse la requête (code 419) s’il ne correspond pas (`includes/config.php:21-31`).
 
 **Que se passe-t-il après 5 mauvais mots de passe ?**
-Le compte est bloqué ; une connexion réussie remet le compteur à zéro. La règle est la même pour les clients et l’administrateur (`includes/connexion_functions.php`, 23 tests dans `tests/test_blocage_connexion.php`). Le déblocage remet aussi le compteur à zéro ; il se fait depuis `admin/clients.php`.
+Le compte est bloqué ; une connexion réussie remet le compteur à zéro. La règle est la même pour les clients et l’administrateur (`includes/connexion_functions.php`, 15 tests dans `tests/test_blocage_connexion.php`). L’administrateur peut débloquer un client depuis `admin/clients.php`.
 
 **Et si c’est l’administrateur qui est bloqué ?**
-Un autre administrateur le débloque depuis la section « Administrateurs » de `admin/clients.php` (fonction `debloquer_compte()`). Si c’est le seul administrateur, personne ne peut se connecter : il suffit alors de lancer sur le serveur `php outils/debloquer_admin.php adresse@email`. Ce script refuse de s’exécuter depuis un navigateur, et le dossier `outils/` est interdit d’accès web. Un administrateur ne peut pas en bloquer un autre : seul le déblocage est proposé.
+Limite connue : il n’existe pas d’écran pour débloquer un administrateur. Il faut remettre `bloque` et `tentatives_connexion` à 0 dans phpMyAdmin. À présenter comme une amélioration à prévoir.
 
 **Comment sécurisez-vous l’envoi d’images ?**
 Taille limitée à 2 Mo, extension autorisée (jpg, png, webp), contenu vérifié comme une vraie image, cohérence entre l’extension et le contenu, et nom de fichier aléatoire : un fichier `.php` ne peut pas être déposé (`includes/image_functions.php`, 20 tests dans `tests/test_images.php`).
@@ -93,7 +93,7 @@ Le cookie est `HttpOnly` (illisible par JavaScript) et `SameSite=Lax` ; l’iden
 ## 5. Tests et qualité
 
 **Comment avez-vous testé l’application ?**
-Quatre suites automatiques, soit 177 vérifications : `tests/test_fonctions.php` (44), `tests/test_blocage_connexion.php` (23), `tests/test_images.php` (20), `tests/run.php` (90). `run.php` crée une base temporaire, importe le schéma et les migrations, passe des commandes complètes, puis supprime la base.
+Quatre suites automatiques, soit 168 vérifications : `tests/test_fonctions.php` (44), `tests/test_blocage_connexion.php` (15), `tests/test_images.php` (20), `tests/run.php` (89). `run.php` crée une base temporaire, importe le schéma et les migrations, passe des commandes complètes, puis supprime la base.
 
 **Pourquoi le cas 56,6 kg / 175 cm ?**
 Il donne 18,48, arrondi à 18,5 : exactement la limite entre insuffisance et corpulence normale. C’est là que les erreurs d’arrondi apparaissent.
@@ -112,7 +112,7 @@ C’est le budget que les répondants jugent nécessaire, pas un prix testé. Je
 ## 7. Bilan et perspectives
 
 **Qu’est-ce qui n’est pas terminé ?**
-Paiement mobile automatique, mise en ligne, application installable (PWA).
+Paiement mobile automatique, mise en ligne, écran de déblocage administrateur, application installable (PWA).
 
 **Que feriez-vous avec plus de temps ?**
 Intégrer l’API marchande Wave ou Orange Money, passer à une architecture MVC, mettre en ligne avec HTTPS, ajouter des notifications de statut au client.
