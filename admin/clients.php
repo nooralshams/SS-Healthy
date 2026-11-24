@@ -4,8 +4,22 @@
 // =====================================================
 // Affiche tous les clients inscrits avec le nombre de leurs
 // commandes et d'abonnements, pour un suivi rapide de la clientèle.
+// Elle liste aussi les administrateurs, pour débloquer un administrateur
+// bloqué après cinq échecs de connexion.
 $titre_page = 'Clients';
 require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/../includes/connexion_functions.php';
+
+// Déblocage d'un administrateur par un autre administrateur.
+// Seul le déblocage est proposé : un administrateur ne peut pas en bloquer un autre.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'debloquer_admin') {
+    $admin_id = filter_input(INPUT_POST, 'admin_id', FILTER_VALIDATE_INT);
+    if ($admin_id && debloquer_compte($pdo, $admin_id, 'admin')) {
+        $_SESSION['message_admin'] = 'Le compte administrateur a été débloqué.';
+    }
+    header('Location: clients.php');
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'blocage') {
     $client_id = filter_input(INPUT_POST, 'client_id', FILTER_VALIDATE_INT);
@@ -35,12 +49,24 @@ $clients = $pdo->query(
      WHERE u.role = 'client'
      ORDER BY u.date_inscription DESC"
 )->fetchAll();
+
+$administrateurs = $pdo->query(
+    "SELECT id, prenom, nom, email, bloque, tentatives_connexion
+     FROM utilisateurs
+     WHERE role = 'admin'
+     ORDER BY nom, prenom"
+)->fetchAll();
 ?>
 
 <section class="section">
     <div class="conteneur">
         <h1 class="section-titre">Clients</h1>
         <p class="section-sous-titre">Tous les clients inscrits. L'IMC est un repère informatif, distinct de leur objectif choisi.</p>
+
+        <?php if (!empty($_SESSION['message_admin'])): ?>
+            <div class="alerte alerte-succes"><?= e($_SESSION['message_admin']) ?></div>
+            <?php unset($_SESSION['message_admin']); ?>
+        <?php endif; ?>
 
         <?php if (empty($clients)): ?>
             <div class="carte-formulaire">
@@ -93,6 +119,43 @@ $clients = $pdo->query(
                 </tbody>
             </table>
         <?php endif; ?>
+
+        <h2 class="section-titre" style="margin-top:48px;">Administrateurs</h2>
+        <p class="section-sous-titre">Un administrateur est bloqué après cinq mots de passe erronés. Un autre administrateur peut le débloquer ici.</p>
+        <table class="tableau">
+            <thead>
+                <tr><th>Administrateur</th><th>E-mail</th><th>État</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                <?php foreach ($administrateurs as $admin): ?>
+                    <tr>
+                        <td><strong><?= e($admin['prenom'] . ' ' . $admin['nom']) ?></strong><?= (int) $admin['id'] === (int) $_SESSION['utilisateur_id'] ? ' <small>(vous)</small>' : '' ?></td>
+                        <td><?= e($admin['email']) ?></td>
+                        <td>
+                            <?php if ((int) $admin['bloque'] === 1): ?>
+                                <strong>Bloqué</strong>
+                            <?php else: ?>
+                                Actif<?= (int) $admin['tentatives_connexion'] > 0 ? ' <small>(' . (int) $admin['tentatives_connexion'] . ' échec(s) récent(s))</small>' : '' ?>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <?php if ((int) $admin['bloque'] === 1): ?>
+                                <form method="post" style="display:inline;">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="action" value="debloquer_admin">
+                                    <input type="hidden" name="admin_id" value="<?= (int) $admin['id'] ?>">
+                                    <button type="submit" class="btn btn-rouge"
+                                            onclick="return confirm('Débloquer ce compte administrateur ?')">Débloquer</button>
+                                </form>
+                            <?php else: ?>
+                                <small>—</small>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <p style="margin-top:12px;"><small>Si le seul administrateur est bloqué, personne ne peut se connecter pour le débloquer : utilisez sur le serveur la commande <code>php outils/debloquer_admin.php adresse@email</code>.</small></p>
     </div>
 </section>
 
