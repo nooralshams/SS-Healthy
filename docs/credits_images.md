@@ -43,7 +43,7 @@ Statuts utilisés :
 | Usage | Fichier | Auteur | Source / lien | Licence | Statut |
 |---|---|---|---|---|---|
 | Page d'accueil (visuel principal) | `images/sport.jpg` | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | Source à retrouver |
-| Aucun plat (probablement la copie d’origine de l’image de la salade d’aubergines ; non suivie par git) | `images/plats/aubergine.jpeg` | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | À supprimer après remplacement |
+| Aucun plat (probablement la copie d’origine de l’image de la salade d’aubergines) | `images/plats/aubergine.jpeg` | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | À supprimer après remplacement |
 | Aucun plat (fichiers présents mais non utilisés en base) | `Saff.jpeg`, `rouge.jpeg` | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | Source à retrouver |
 
 ## Remarque technique
