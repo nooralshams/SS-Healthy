@@ -36,6 +36,10 @@
 | `e7318fa` | Extra offert du composeur de bowls : fonio au lieu de quinoa |
 | `2745803` | Avertissement santé sur la page IMC |
 | `caf560c` | Questions probables du jury et réponses (`docs/preparation_jury.md`) |
+| `0bfa4a8` | Mise à jour de ce rapport |
+| `c12d6f9`, `29c63e2` | Déblocage des administrateurs, **annulé** ensuite par `9c2cbb8` et `51463e8` |
+| `badb23a` | Menu en rideau vert sous le logo (client ou admin connecté, espace admin) |
+| `8f4b3ba` | Objectif nutritionnel choisi seulement après l’enregistrement d’un IMC ; diagramme de classes (0..1), séquence d’inscription et MLD mis à jour |
 
 ## Améliorations hors critiques
 
@@ -43,6 +47,8 @@ Ces changements ne répondent pas directement à une critique, mais renforcent l
 
 - **Avertissement santé** (`imc.php`, commit `2745803`) : l’application précise qu’elle ne pose aucun diagnostic, que l’IMC ignore la masse musculaire, l’âge et la grossesse, et que les plats « diabète » ne remplacent pas un suivi médical. C’est une réponse prête si le jury pose la question de la responsabilité médicale.
 - **Page d’accueil** (`index.php`, `css/style.css`, commit `182b0c6`) : le titre n’est plus masqué par l’image, et « S’abonner » est mis en avant, y compris sur mobile, où le bouton était auparavant caché.
+- **Objectif après l’IMC** (`inscription.php`, `compte.php`, commit `8f4b3ba`) : un nouveau client n’a plus l’objectif « maintien » imposé ; il le choisit après avoir enregistré son IMC. Le diagramme de classes (Utilisateur 0..1 Objectif), la séquence d’inscription (message 9) et le MLD ont été corrigés en même temps.
+- **Menu en rideau** (`includes/header.php`, `admin/includes/header.php`, `js/rideau.js`, commit `badb23a`) : présentation uniquement, sans effet sur les diagrammes.
 - **Fonio offert** (commit `e7318fa`) : seul le libellé affiché change ; les commandes déjà passées gardent leur historique.
 
 ## Tableau de suivi

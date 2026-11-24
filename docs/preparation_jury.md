@@ -33,6 +33,9 @@ Pour qu’une seule règle s’applique partout. L’IMC est affiché et enregis
 **Votre application donne-t-elle des conseils médicaux ?**
 Non. Elle propose des objectifs nutritionnels généraux et le dit clairement : un encadré sur la page IMC précise qu’elle ne pose aucun diagnostic, que l’IMC ignore la masse musculaire, l’âge et la grossesse, et qu’une personne diabétique doit consulter un médecin (`imc.php`, encadré « Information santé importante »).
 
+**Pourquoi un nouveau client n’a-t-il pas d’objectif ?**
+Parce que l’objectif doit découler de l’IMC. À l’inscription, la colonne `objectif` reste vide (NULL) ; « Mon compte » affiche « À définir après le calcul de votre IMC ». Le choix se fait sur la page IMC, parmi les objectifs compatibles avec le résultat (`inscription.php`, `compte.php`, `imc.php`). C’est pourquoi le diagramme de classes indique 0..1 entre Utilisateur et Objectif.
+
 **Pourquoi l’objectif « diabète » est-il proposé à tous les profils ?**
 Le diabète ne dépend pas de l’IMC : une personne de corpulence normale peut être diabétique. L’objectif correspond à des plats à index glycémique faible ; c’est l’utilisateur qui le choisit (`objectifs_autorises()`, `includes/fonctions.php:34`).
 
