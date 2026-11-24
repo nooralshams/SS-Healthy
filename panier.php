@@ -141,7 +141,7 @@ require_once 'includes/header.php';
             <?php endif; ?>
             <div class="panier-layout">
                 <div>
-                    <table class="tableau">
+                    <table class="tableau panier-tableau">
                         <thead>
                             <tr>
                                 <th>Plat</th>
@@ -154,7 +154,7 @@ require_once 'includes/header.php';
                         <tbody>
                             <?php foreach ($articles as $article): ?>
                                 <tr>
-                                    <td>
+                                    <td class="panier-cellule-plat">
                                         <strong><?= e($article['plat']['nom']) ?></strong>
                                         <?php if ($article['type'] === 'bowl_personnalise'): ?>
                                             <ul class="panier-bowl-details">
@@ -169,8 +169,8 @@ require_once 'includes/header.php';
                                             <small class="plat-indisponible">Actuellement indisponible</small>
                                         <?php endif; ?>
                                     </td>
-                                    <td><?= prix_fcfa($article['plat']['prix']) ?></td>
-                                    <td>
+                                    <td data-label="Prix"><?= prix_fcfa($article['plat']['prix']) ?></td>
+                                    <td data-label="Quantité">
                                         <form method="post" class="form-quantite">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="action" value="modifier">
@@ -180,8 +180,8 @@ require_once 'includes/header.php';
                                             <button type="submit" class="btn btn-contour btn-petit">Mettre à jour</button>
                                         </form>
                                     </td>
-                                    <td class="prix"><?= prix_fcfa($article['sous_total']) ?></td>
-                                    <td>
+                                    <td class="prix" data-label="Sous-total"><?= prix_fcfa($article['sous_total']) ?></td>
+                                    <td class="panier-cellule-action">
                                         <form method="post">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="action" value="supprimer">

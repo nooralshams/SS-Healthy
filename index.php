@@ -44,7 +44,7 @@ $image_favori_disponible = $plat_favori
                 </div>
             </div>
             <a href="abonnements.php" class="hero-carte-abonnement">
-                <span class="hero-carte-icone" aria-hidden="true">⚡</span>
+                <span class="hero-carte-icone"><?= icone('eclair') ?></span>
                 <span class="hero-carte-texte">
                     <strong>Vos repas de la semaine, sans y penser</strong>
                     <?php if ($formule_depart): ?>

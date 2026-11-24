@@ -29,90 +29,118 @@ $dernieres_commandes = $pdo->query(
      LIMIT 5'
 )->fetchAll();
 ?>
+<?php
+// Données d'affichage (lecture seule) : date du jour en français et parts par objectif.
+$jours = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+$mois = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+$date_du_jour = $jours[(int) date('w')] . ' ' . (int) date('j') . ' ' . $mois[(int) date('n') - 1] . ' ' . date('Y');
+$max_commandes_objectif = max(array_merge([1], array_map(fn($l) => (int) $l['nombre'], $repartition_commandes)));
+?>
 
-<section class="section">
+<section class="section espace-client">
     <div class="conteneur">
-        <div class="admin-dashboard-entete">
-            <div>
-                <p class="admin-dashboard-surtitre">ESPACE ADMINISTRATEUR</p>
-                <h1 class="section-titre">Bonjour <?= e($_SESSION['prenom'] ?? 'Admin') ?></h1>
-                <p class="section-sous-titre">Voici l'essentiel de votre activité aujourd'hui.</p>
+        <div class="ad-banniere apparition" style="--i:0">
+            <span class="ec-bulle ec-bulle-1" aria-hidden="true"></span>
+            <span class="ec-bulle ec-bulle-2" aria-hidden="true"></span>
+            <div class="ad-banniere-texte">
+                <p class="ec-surtitre">Espace administrateur</p>
+                <h1>Bonjour <?= e($_SESSION['prenom'] ?? 'Admin') ?> !</h1>
+                <p>Voici l'essentiel de votre activité aujourd'hui.</p>
+                <span class="ad-date"><?= e(ucfirst($date_du_jour)) ?></span>
             </div>
-            <a href="../index.php" class="btn btn-contour">Voir le site</a>
+            <div class="ad-banniere-actions">
+                <a href="commandes.php" class="btn btn-mangue">Traiter les commandes</a>
+                <a href="../index.php" class="btn btn-contour">Voir le site</a>
+            </div>
         </div>
 
-        <div class="admin-stats">
-            <a href="commandes.php" class="stat-carte stat-prioritaire <?= $commandes_attente > 0 ? 'stat-alerte' : '' ?>">
-                <span class="stat-valeur"><?= $commandes_attente ?></span>
-                <span class="stat-label">Commandes à traiter</span>
+        <div class="ad-stats">
+            <a href="commandes.php" class="ad-stat apparition<?= $commandes_attente > 0 ? ' ad-alerte' : '' ?>" style="--i:1">
+                <?php if ($commandes_attente > 0): ?><span class="ad-pastille-alerte" aria-hidden="true"></span><?php endif; ?>
+                <span class="ad-stat-icone ec-teinte-or"><?= icone('recu') ?></span>
+                <span class="ad-stat-valeur" data-compteur="<?= $commandes_attente ?>"><?= $commandes_attente ?></span>
+                <span class="ad-stat-label">Commandes à traiter</span>
             </a>
-            <a href="clients.php" class="stat-carte">
-                <span class="stat-valeur"><?= $nb_clients ?></span>
-                <span class="stat-label">Clients</span>
+            <a href="clients.php" class="ad-stat apparition" style="--i:2; --teinte:#E6EEF8">
+                <span class="ad-stat-icone ec-teinte-bleu"><?= icone('utilisateurs') ?></span>
+                <span class="ad-stat-valeur" data-compteur="<?= $nb_clients ?>"><?= $nb_clients ?></span>
+                <span class="ad-stat-label">Clients</span>
             </a>
-            <a href="plats.php" class="stat-carte">
-                <span class="stat-valeur"><?= $nb_plats ?></span>
-                <span class="stat-label">Plats disponibles</span>
+            <a href="plats.php" class="ad-stat apparition" style="--i:3; --teinte:#EAF6EF">
+                <span class="ad-stat-icone ec-teinte-vert"><?= icone('bol') ?></span>
+                <span class="ad-stat-valeur" data-compteur="<?= $nb_plats ?>"><?= $nb_plats ?></span>
+                <span class="ad-stat-label">Plats disponibles</span>
             </a>
-            <a href="abonnements.php" class="stat-carte">
-                <span class="stat-valeur"><?= $abonnements_actifs ?></span>
-                <span class="stat-label">Abonnements actifs</span>
+            <a href="abonnements.php" class="ad-stat apparition" style="--i:4; --teinte:#F3EAF0">
+                <span class="ad-stat-icone ec-teinte-prune"><?= icone('eclair') ?></span>
+                <span class="ad-stat-valeur" data-compteur="<?= $abonnements_actifs ?>"><?= $abonnements_actifs ?></span>
+                <span class="ad-stat-label">Abonnements actifs</span>
             </a>
         </div>
 
-        <div class="admin-dashboard-actions">
-            <a href="plats.php">Gérer les plats <span>→</span></a>
+        <div class="ad-actions apparition" style="--i:5">
+            <a href="plats.php">Gérer les plats <span aria-hidden="true">→</span></a>
             <a href="commandes.php">Commandes en attente <strong><?= $commandes_attente ?></strong></a>
             <a href="abonnements.php">Abonnements à valider <strong><?= $abonnements_attente ?></strong></a>
-            <a href="clients.php">Consulter les clients <span>→</span></a>
+            <a href="clients.php">Consulter les clients <span aria-hidden="true">→</span></a>
         </div>
 
-        <div class="admin-dashboard-section-titre">
-            <div>
-                <h2>Répartition des commandes par objectif</h2>
-                <p>Nombre de commandes enregistrées pour chaque profil nutritionnel.</p>
+        <div class="ad-grille">
+            <div class="ad-carte apparition" style="--i:6">
+                <div class="ad-carte-entete">
+                    <div>
+                        <h2>Répartition des commandes par objectif</h2>
+                        <p>Nombre de commandes enregistrées pour chaque profil nutritionnel.</p>
+                    </div>
+                </div>
+                <?php if (empty($repartition_commandes)): ?>
+                    <div class="ad-vide">Aucune commande pour le moment.</div>
+                <?php else: ?>
+                    <ul class="ad-barres">
+                        <?php foreach ($repartition_commandes as $n => $ligne): ?>
+                            <li>
+                                <div class="ad-barre-ligne">
+                                    <span><?= e(libelle_objectif($ligne['objectif'], $OBJECTIFS)) ?></span>
+                                    <strong><?= (int) $ligne['nombre'] ?></strong>
+                                </div>
+                                <div class="ad-barre" aria-hidden="true">
+                                    <span style="--part: <?= round((int) $ligne['nombre'] / $max_commandes_objectif * 100) ?>%; --i: <?= (int) $n ?>"></span>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
-        </div>
-        <table class="tableau">
-            <thead><tr><th>Objectif</th><th>Commandes</th></tr></thead>
-            <tbody>
-                <?php foreach ($repartition_commandes as $ligne): ?>
-                    <tr>
-                        <td><?= e(libelle_objectif($ligne['objectif'], $OBJECTIFS)) ?></td>
-                        <td><?= (int) $ligne['nombre'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
 
-        <div class="admin-dashboard-section-titre">
-            <div>
-                <h2>Commandes récentes</h2>
-                <p>Les cinq dernières commandes reçues.</p>
+            <div class="ad-carte apparition" style="--i:7">
+                <div class="ad-carte-entete">
+                    <div>
+                        <h2>Commandes récentes</h2>
+                        <p>Les cinq dernières commandes reçues.</p>
+                    </div>
+                    <a href="commandes.php" class="btn btn-contour btn-petit">Toutes</a>
+                </div>
+                <?php if (empty($dernieres_commandes)): ?>
+                    <div class="ad-vide">Aucune commande pour le moment.</div>
+                <?php else: ?>
+                    <div class="ad-commandes">
+                        <?php foreach ($dernieres_commandes as $commande): ?>
+                            <div class="ad-commande">
+                                <span class="ad-commande-num">n° <?= (int) $commande['id'] ?></span>
+                                <span class="ad-commande-client">
+                                    <strong><?= e($commande['prenom'] . ' ' . $commande['nom']) ?></strong>
+                                    <span><?= e(date('d/m/Y H:i', strtotime($commande['date_commande']))) ?></span>
+                                </span>
+                                <span class="prix"><?= prix_fcfa($commande['total']) ?></span>
+                                <span class="badge badge-statut-<?= e($commande['statut']) ?>"><?= e(libelle_statut_commande($commande['statut'])) ?></span>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
-            <a href="commandes.php" class="btn btn-contour">Toutes les commandes</a>
         </div>
-        <?php if (empty($dernieres_commandes)): ?>
-            <div class="admin-dashboard-vide">Aucune commande pour le moment.</div>
-        <?php else: ?>
-            <table class="tableau admin-dashboard-tableau">
-                <thead>
-                    <tr><th>Commande</th><th>Client</th><th>Date</th><th>Total</th><th>Statut</th></tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($dernieres_commandes as $commande): ?>
-                        <tr>
-                            <td>Numéro <?= (int) $commande['id'] ?></td>
-                            <td><?= e($commande['prenom'] . ' ' . $commande['nom']) ?></td>
-                            <td><?= e(date('d/m/Y H:i', strtotime($commande['date_commande']))) ?></td>
-                            <td><?= prix_fcfa($commande['total']) ?></td>
-                            <td><span class="badge badge-statut-<?= e($commande['statut']) ?>"><?= e($commande['statut']) ?></span></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        <?php endif; ?>
     </div>
 </section>
+<script src="../js/compteurs.js?v=<?= filemtime(__DIR__ . '/../js/compteurs.js') ?>" defer></script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

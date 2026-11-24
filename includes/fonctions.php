@@ -117,3 +117,26 @@ function libelle_objectif($objectif, array $OBJECTIFS): string {
     }
     return $OBJECTIFS[$objectif] ?? (string) $objectif;
 }
+
+/**
+ * Pictogramme SVG au trait (24 × 24), dessiné pour SS'Healthy.
+ * Il prend la couleur du texte (currentColor) et reste décoratif (aria-hidden).
+ */
+function icone(string $nom, string $classe = 'icone'): string {
+    $traces = [
+        'sac'          => '<path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7V6a3 3 0 0 1 6 0v1"/>',
+        'eclair'       => '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+        'jauge'        => '<path d="M4 18a8 8 0 1 1 16 0"/><path d="M12 18l4-5"/><circle cx="12" cy="18" r="1.2"/>',
+        'carte'        => '<rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18"/><path d="M7 15h4"/>',
+        'bol'          => '<path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 8.5c0-1.4 1-1.9 1-3.3M12 8.5c0-1.4 1-1.9 1-3.3M16 8.5c0-1.4 1-1.9 1-3.3"/>',
+        'courrier'     => '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7 8 6 8-6"/>',
+        'recu'         => '<path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 12h6"/>',
+        'utilisateurs' => '<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0"/><path d="M15.5 5.2a3 3 0 0 1 0 5.6"/><path d="M17 14.2a5 5 0 0 1 3.5 4.8"/>',
+    ];
+    if (!isset($traces[$nom])) {
+        return '';
+    }
+    return '<svg class="' . e($classe) . '" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" '
+        . 'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">'
+        . $traces[$nom] . '</svg>';
+}
