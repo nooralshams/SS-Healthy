@@ -40,6 +40,10 @@ define('SITE_NOM', 'SS’Healthy');
 define('HEURE_OUVERTURE', 9);       // 09h
 define('HEURE_FERMETURE', 21);      // 21h
 
+// Coordonnées affichées pour les paiements mobiles (Wave et Orange Money)
+define('PAIEMENT_BENEFICIAIRE', 'Salma Marieme Diallo');
+define('PAIEMENT_NUMERO', '+221 77 018 82 98');
+
 try {
     $pdo = new PDO(
         'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=utf8mb4',

@@ -29,14 +29,14 @@ $creneaux = creneaux_disponibles();
 $paiements_mobiles = [
     'wave' => [
         'nom' => 'Wave',
-        'numero' => '+221 77 018 82 98',
-        'beneficiaire' => 'Salma Marième Diallo',
+        'numero' => PAIEMENT_NUMERO,
+        'beneficiaire' => PAIEMENT_BENEFICIAIRE,
         'classe' => 'wave',
     ],
     'orange_money' => [
         'nom' => 'Orange Money',
-        'numero' => '+221 77 018 82 98',
-        'beneficiaire' => 'Salma Marieme Diallo',
+        'numero' => PAIEMENT_NUMERO,
+        'beneficiaire' => PAIEMENT_BENEFICIAIRE,
         'classe' => 'orange',
     ],
 ];
