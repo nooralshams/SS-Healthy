@@ -181,7 +181,7 @@ try {
     $premium = $selection;
     $premium['proteins'] = ['dorade'];
     $premiumResult = preparer_selection_bowl($premium, $BOWL_CONFIG);
-    $assert($premiumResult['ok'] && $premiumResult['price'] === 3200, 'La protéine premium doit ajouter 700 F CFA.');
+    $assert($premiumResult['ok'] && $premiumResult['price'] === 3000, 'La protéine premium doit ajouter 500 F CFA.');
 
     $missingSauce = $selection;
     $missingSauce['sauce'] = '';

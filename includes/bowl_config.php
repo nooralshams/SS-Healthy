@@ -13,6 +13,7 @@ $BOWL_CONFIG = [
          'fonio' => 'Fonio',
         'riz-basmati' => 'Riz basmati',
         'riz-complet' => 'Riz complet',
+        'citrouille' => 'Citrouille',
     ],
     'proteins' => [
         'boeuf-maigre' => ['label' => 'Bœuf maigre', 'premium' => false],
@@ -28,7 +29,6 @@ $BOWL_CONFIG = [
     ],
     'vegetables' => [
         'avocat' => 'Avocat',
-       
         'carottes' => 'Carottes',
         'carottes-rapees' => 'Carottes râpées',
         'concombres' => 'Concombres',
@@ -41,6 +41,7 @@ $BOWL_CONFIG = [
         'patate-douce' => 'Patate douce',
         'patate-douce-rotie' => 'Patate douce rôtie / frites',
         'persil' => 'Persil',
+        'ciboulette' => 'Ciboulette',
         'petits-pois' => 'Petits pois',
         'poivrons' => 'Poivrons',
         'pomme-de-terre' => 'Pomme de terre',
@@ -53,10 +54,15 @@ $BOWL_CONFIG = [
         'citron' => 'Sauce citron',
         'piquante' => 'Sauce piquante',
         'yaourt' => 'Sauce yaourt',
+        'fromage-blanc-moutarde' => 'Sauce Fromage Blanc & Moutarde',
+        'tomate-maison' => 'Sauce Tomate Maison',
+        'avocat' => 'Sauce Avocat',
+        'tzatziki' => 'Sauce Tzatziki',
+        'huile-de-palme' => 'Sauce Huile de Palme',
     ],
     'extras' => [
         'extra_unit_price' => 500,
-        'premium_protein_price' => 700,
+        'premium_protein_price' => 500,
         'max_extra_units' => 20,
     ],
 ];
