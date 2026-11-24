@@ -170,6 +170,10 @@ foreach ($plats as &$plat) {
     $plat['objectifs'] = array_column($stmt_objectifs->fetchAll(), 'objectif');
 }
 unset($plat);
+
+// Dans l'admin, l'objectif « diabete » est nommé explicitement pour ne pas le confondre
+// avec la case « Plat à index glycémique faible » (colonne plats.ig_faible).
+$libelles_objectifs_admin = array_merge($OBJECTIFS, ['diabete' => 'Objectif Diabète']);
 ?>
 
 <section class="section">
@@ -243,7 +247,7 @@ unset($plat);
 
                 <div class="champ">
                     <label>Objectifs compatibles</label>
-                    <?php foreach ($OBJECTIFS as $cle => $libelle): ?>
+                    <?php foreach ($libelles_objectifs_admin as $cle => $libelle): ?>
                         <label class="admin-check">
                             <input type="checkbox" name="objectifs[]" value="<?= e($cle) ?>"> <?= e($libelle) ?>
                         </label>
@@ -252,7 +256,7 @@ unset($plat);
 
                 <div class="champ">
                     <label class="admin-check">
-                        <input type="checkbox" name="ig_faible" value="1"> Index glycémique faible (adapté diabète)
+                        <input type="checkbox" name="ig_faible" value="1"> Plat à index glycémique faible
                     </label>
                 </div>
 
@@ -310,11 +314,11 @@ unset($plat);
                                     </div>
                                     <div class="champ">
                                         <label>Objectifs compatibles</label>
-                                        <?php foreach ($OBJECTIFS as $cle => $libelle): ?>
+                                        <?php foreach ($libelles_objectifs_admin as $cle => $libelle): ?>
                                             <label class="admin-check"><input type="checkbox" name="objectifs[]" value="<?= e($cle) ?>" <?= in_array($cle, $plat['objectifs'], true) ? 'checked' : '' ?>> <?= e($libelle) ?></label>
                                         <?php endforeach; ?>
                                     </div>
-                                    <label class="admin-check"><input type="checkbox" name="ig_faible" value="1" <?= (int) $plat['ig_faible'] ? 'checked' : '' ?>> Index glycémique faible</label>
+                                    <label class="admin-check"><input type="checkbox" name="ig_faible" value="1" <?= (int) $plat['ig_faible'] ? 'checked' : '' ?>> Plat à index glycémique faible</label>
                                     <button type="submit" class="btn btn-plein btn-petit">Enregistrer les modifications</button>
                                 </form>
                             </details>
