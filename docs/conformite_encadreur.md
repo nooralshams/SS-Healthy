@@ -31,6 +31,19 @@
 | `ea35f9e` | README, schéma SQL sans hash de mot de passe, `.gitignore` |
 | `e33c489` | Envoi d’images de plats contrôlé et tests associés |
 | `9cfc07b` | Figures 9, 11, 12 et 13 corrigées, encodage des libellés réparé |
+| `78613a1` | Création de ce rapport de conformité |
+| `182b0c6` | Page d’accueil : titre dégagé de l’image, carte « S’abonner » avec le prix d’appel lu en base |
+| `e7318fa` | Extra offert du composeur de bowls : fonio au lieu de quinoa |
+| `2745803` | Avertissement santé sur la page IMC |
+| `caf560c` | Questions probables du jury et réponses (`docs/preparation_jury.md`) |
+
+## Améliorations hors critiques
+
+Ces changements ne répondent pas directement à une critique, mais renforcent le projet pour la soutenance :
+
+- **Avertissement santé** (`imc.php`, commit `2745803`) : l’application précise qu’elle ne pose aucun diagnostic, que l’IMC ignore la masse musculaire, l’âge et la grossesse, et que les plats « diabète » ne remplacent pas un suivi médical. C’est une réponse prête si le jury pose la question de la responsabilité médicale.
+- **Page d’accueil** (`index.php`, `css/style.css`, commit `182b0c6`) : le titre n’est plus masqué par l’image, et « S’abonner » est mis en avant, y compris sur mobile, où le bouton était auparavant caché.
+- **Fonio offert** (commit `e7318fa`) : seul le libellé affiché change ; les commandes déjà passées gardent leur historique.
 
 ## Tableau de suivi
 
@@ -61,6 +74,7 @@
 - Parcours de démonstration et vidéo de secours : `docs/rapport_memoire_base.md` l. 120-136.
 - La fonction appelée `enregistrer()` dans la critique s’appelle en réalité `enregistrer_commande()` (`includes/commande_functions.php:48`). Explication ligne par ligne : l. 138-149.
 - `determinerProfil()` se trouve dans `includes/fonctions.php:89`. Explication : l. 151-157.
+- Questions probables du jury, avec des réponses qui renvoient au code : `docs/preparation_jury.md`.
 
 ## Bilan
 
