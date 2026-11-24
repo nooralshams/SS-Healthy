@@ -3,12 +3,15 @@
 // ZIG HEALTHY - Admin : gestion des plats
 // =====================================================
 // Permet à l'administrateur de voir le menu complet,
-// d'ajouter un plat et d'activer/désactiver la disponibilité d'un plat.
+// d'ajouter un plat (avec une image contrôlée) et d'activer/désactiver
+// la disponibilité d'un plat.
 $titre_page = 'Gestion des plats';
 require_once __DIR__ . '/includes/header.php';
+require_once __DIR__ . '/../includes/image_functions.php';
 
 $message = '';
 $erreur = '';
+$dossier_images = __DIR__ . '/../images/plats';
 
 // -----------------------------------------------------
 // Ajout d'un nouveau plat
@@ -29,11 +32,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'ajout
         || $proteines === false || $glucides === false || $lipides === false) {
         $erreur = 'Veuillez remplir correctement tous les champs obligatoires.';
     } else {
+        $envoi = enregistrer_image_plat($_FILES['image'] ?? [], $dossier_images);
+        if (!$envoi['ok'] && !$envoi['absent']) {
+            $erreur = $envoi['erreur'];
+        }
+    }
+
+    if ($erreur === '') {
+        $image = $envoi['ok'] ? $envoi['nom'] : 'defaut.jpg';
         $stmt = $pdo->prepare(
-            'INSERT INTO plats (categorie_id, nom, description, prix, calories, proteines, glucides, lipides, ig_faible)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            'INSERT INTO plats (categorie_id, nom, description, prix, calories, proteines, glucides, lipides, ig_faible, image)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
         );
-        $stmt->execute([$categorie_id, $nom, $description, $prix, $calories, $proteines, $glucides, $lipides, $ig_faible]);
+        $stmt->execute([$categorie_id, $nom, $description, $prix, $calories, $proteines, $glucides, $lipides, $ig_faible, $image]);
         $plat_id = (int) $pdo->lastInsertId();
 
         // Association du plat aux objectifs nutritionnels cochés
@@ -83,10 +94,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'modif
         || $proteines === false || $glucides === false || $lipides === false) {
         $erreur = 'Veuillez remplir correctement tous les champs du plat.';
     } else {
+        $envoi = enregistrer_image_plat($_FILES['image'] ?? [], $dossier_images);
+        if (!$envoi['ok'] && !$envoi['absent']) {
+            $erreur = $envoi['erreur'];
+        }
+    }
+
+    if ($erreur === '') {
+        $stmt_ancienne = $pdo->prepare('SELECT image FROM plats WHERE id = ?');
+        $stmt_ancienne->execute([$plat_id]);
+        $ancienne_image = $stmt_ancienne->fetchColumn();
+
         $pdo->beginTransaction();
         try {
             $stmt = $pdo->prepare('UPDATE plats SET categorie_id = ?, nom = ?, description = ?, prix = ?, calories = ?, proteines = ?, glucides = ?, lipides = ?, ig_faible = ? WHERE id = ?');
             $stmt->execute([$categorie_id, $nom, $description, $prix, $calories, $proteines, $glucides, $lipides, $ig_faible, $plat_id]);
+            if ($envoi['ok']) {
+                $pdo->prepare('UPDATE plats SET image = ? WHERE id = ?')->execute([$envoi['nom'], $plat_id]);
+            }
 
             $pdo->prepare('DELETE FROM plat_objectifs WHERE plat_id = ?')->execute([$plat_id]);
             $objectifs_valides = ['perte_gras', 'prise_masse', 'diabete', 'maintien'];
@@ -98,9 +123,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'modif
             }
 
             $pdo->commit();
+            if ($envoi['ok']) {
+                supprimer_image_plat($ancienne_image ?: null, $dossier_images);
+            }
             $_SESSION['message_admin'] = 'Le plat « ' . $nom . ' » a été modifié.';
         } catch (PDOException $e) {
             if ($pdo->inTransaction()) $pdo->rollBack();
+            if ($envoi['ok']) {
+                supprimer_image_plat($envoi['nom'], $dossier_images);
+            }
             $erreur = 'Impossible de modifier ce plat.';
         }
     }
@@ -156,7 +187,7 @@ unset($plat);
 
         <details class="admin-ajout">
             <summary class="btn btn-plein">+ Ajouter un plat</summary>
-            <form method="post" class="carte-formulaire admin-form-plat">
+            <form method="post" enctype="multipart/form-data" class="carte-formulaire admin-form-plat">
                 <?= csrf_field() ?>
                 <input type="hidden" name="action" value="ajouter">
 
@@ -177,6 +208,11 @@ unset($plat);
                 <div class="champ">
                     <label for="description">Description</label>
                     <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+
+                <div class="champ">
+                    <label for="image">Image (JPG, PNG ou WebP, 2 Mo maximum)</label>
+                    <input id="image" name="image" type="file" accept="image/jpeg,image/png,image/webp">
                 </div>
 
                 <div class="admin-grille-2">
@@ -248,7 +284,7 @@ unset($plat);
                         <td>
                             <details class="admin-edit-plat">
                                 <summary class="btn btn-modifier btn-petit">Modifier</summary>
-                                <form method="post" class="carte-formulaire admin-form-plat">
+                                <form method="post" enctype="multipart/form-data" class="carte-formulaire admin-form-plat">
                                     <?= csrf_field() ?>
                                     <input type="hidden" name="action" value="modifier">
                                     <input type="hidden" name="plat_id" value="<?= (int) $plat['id'] ?>">
@@ -262,6 +298,7 @@ unset($plat);
                                         </select>
                                     </div>
                                     <div class="champ"><label>Description</label><textarea name="description" rows="3"><?= e($plat['description']) ?></textarea></div>
+                                    <div class="champ"><label>Nouvelle image (JPG, PNG ou WebP, 2 Mo maximum)</label><input type="file" name="image" accept="image/jpeg,image/png,image/webp"></div>
                                     <div class="admin-grille-2">
                                         <div class="champ"><label>Prix (FCFA) *</label><input type="number" name="prix" value="<?= (int) $plat['prix'] ?>" min="0" required></div>
                                         <div class="champ"><label>Calories *</label><input type="number" name="calories" value="<?= (int) $plat['calories'] ?>" min="0" required></div>

@@ -65,11 +65,13 @@ Depuis la racine du projet :
 ```powershell
 php tests/test_fonctions.php
 php tests/test_blocage_connexion.php
+php tests/test_images.php
 php tests/run.php
 ```
 
 - `test_fonctions.php` vérifie les règles d’IMC, les objectifs, les créneaux et quelques fonctions utilitaires, sans base de données.
 - `test_blocage_connexion.php` crée et supprime une base temporaire pour vérifier le blocage après cinq échecs.
+- `test_images.php` vérifie le contrôle des images de plats envoyées depuis l’administration (taille, extension, type réel, renommage), sans base de données.
 - `run.php` crée une base temporaire, exécute les tests d’intégration (schéma, migrations, panier, commande, transactions et règles métier), puis supprime cette base temporaire. Il nécessite un compte MySQL autorisé à créer et supprimer des bases de test.
 
 Ces tests ne doivent pas être exécutés contre une base de production. Ils n’ont pas besoin du compte administrateur de l’application.
