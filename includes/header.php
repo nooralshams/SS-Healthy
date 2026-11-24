@@ -18,14 +18,23 @@ require_once __DIR__ . '/fonctions.php';
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=<?= filemtime(__DIR__ . '/../css/style.css') ?>">
     <script src="js/password-toggle.js" defer></script>
+    <script src="js/rideau.js?v=<?= filemtime(__DIR__ . '/../js/rideau.js') ?>" defer></script>
 </head>
 <body>
-<header class="site-header">
+<?php $nav_rideau = est_connecte(); // client ou administrateur connecté : menu en rideau sous le logo ?>
+<header class="site-header<?= $nav_rideau ? ' site-header--connecte' : '' ?>">
     <div class="conteneur nav-conteneur">
-        <a href="index.php" class="logo">
-            <span class="logo-marque">SS’</span><span class="logo-accent">Healthy</span>
-        </a>
-        <nav class="nav-principale" id="menu-principal" aria-label="Navigation principale">
+        <div class="logo-zone">
+            <a href="index.php" class="logo">
+                <span class="logo-marque">SS’</span><span class="logo-accent">Healthy</span>
+            </a>
+            <?php if ($nav_rideau): ?>
+                <button class="rideau-toggle" type="button" aria-controls="menu-principal" aria-expanded="false">
+                    Menu <span class="rideau-fleche" aria-hidden="true">▾</span>
+                </button>
+            <?php endif; ?>
+        </div>
+        <nav class="nav-principale<?= $nav_rideau ? ' nav-rideau' : '' ?>" id="menu-principal" aria-label="Navigation principale">
             <a href="menu.php">Menu</a>
             <a href="abonnements.php">Abonnements</a>
             <a href="concept.php">Concept</a>
@@ -49,9 +58,11 @@ require_once __DIR__ . '/fonctions.php';
                 <?php endif; ?>
             </a>
             <a href="menu.php" class="btn btn-commander">Commander</a>
-            <button class="menu-toggle" type="button" aria-controls="menu-principal" aria-expanded="false" aria-label="Ouvrir le menu">
-                <span aria-hidden="true">☰</span>
-            </button>
+            <?php if (!$nav_rideau): ?>
+                <button class="menu-toggle" type="button" aria-controls="menu-principal" aria-expanded="false" aria-label="Ouvrir le menu">
+                    <span aria-hidden="true">☰</span>
+                </button>
+            <?php endif; ?>
         </div>
     </div>
     <div class="bandeau-horaires">

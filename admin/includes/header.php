@@ -33,15 +33,21 @@ $page_courante = basename($_SERVER['SCRIPT_NAME']);
     <link rel="stylesheet" href="../css/style.css?v=<?= filemtime(__DIR__ . '/../../css/style.css') ?>">
     <link rel="stylesheet" href="../css/admin.css?v=<?= filemtime(__DIR__ . '/../../css/admin.css') ?>">
     <script src="../js/password-toggle.js" defer></script>
+    <script src="../js/rideau.js?v=<?= filemtime(__DIR__ . '/../../js/rideau.js') ?>" defer></script>
 </head>
 <body>
-<header class="site-header admin-header">
+<header class="site-header admin-header site-header--connecte">
     <div class="conteneur nav-conteneur">
-        <a href="dashboard.php" class="logo">
-            <span class="logo-marque">SS’</span><span class="logo-accent">Healthy</span>
-            <span class="admin-badge">Admin</span>
-        </a>
-        <nav class="nav-principale">
+        <div class="logo-zone">
+            <a href="dashboard.php" class="logo">
+                <span class="logo-marque">SS’</span><span class="logo-accent">Healthy</span>
+                <span class="admin-badge">Admin</span>
+            </a>
+            <button class="rideau-toggle" type="button" aria-controls="menu-admin" aria-expanded="false">
+                Menu <span class="rideau-fleche" aria-hidden="true">▾</span>
+            </button>
+        </div>
+        <nav class="nav-principale nav-rideau" id="menu-admin" aria-label="Navigation de l’administration">
             <a href="dashboard.php" <?= $page_courante === 'dashboard.php' ? 'class="actif"' : '' ?>>Tableau de bord</a>
             <a href="plats.php" <?= $page_courante === 'plats.php' ? 'class="actif"' : '' ?>>Plats</a>
             <a href="categories.php" <?= $page_courante === 'categories.php' ? 'class="actif"' : '' ?>>Catégories</a>
@@ -49,15 +55,13 @@ $page_courante = basename($_SERVER['SCRIPT_NAME']);
             <a href="abonnements.php" <?= $page_courante === 'abonnements.php' ? 'class="actif"' : '' ?>>Abonnements</a>
             <a href="messages.php" <?= $page_courante === 'messages.php' ? 'class="actif"' : '' ?>>Messages</a>
             <a href="clients.php" <?= $page_courante === 'clients.php' ? 'class="actif"' : '' ?>>Clients</a>
-        </nav>
-        <div class="nav-actions">
             <a href="profil.php" <?= $page_courante === 'profil.php' ? 'class="actif"' : '' ?>>Profil</a>
             <a href="../index.php">Voir le site</a>
-            <form method="post" action="logout.php" class="admin-logout-form">
+            <form method="post" action="logout.php" class="nav-logout-form admin-logout-form">
                 <?= csrf_field() ?>
                 <button type="submit" class="lien-connexion">Déconnexion</button>
             </form>
-        </div>
+        </nav>
     </div>
 </header>
 <main>

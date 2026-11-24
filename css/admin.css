@@ -9,20 +9,7 @@
     white-space: nowrap;
 }
 
-.admin-header .nav-principale {
-    flex-wrap: nowrap;
-    gap: clamp(10px, 1.5vw, 22px);
-}
-
-.admin-header .nav-principale a,
-.admin-header .nav-actions a {
-    white-space: nowrap;
-    font-size: .9rem;
-}
-
-.admin-header .nav-actions {
-    gap: 16px;
-}
+/* Les liens de l’administration sont dans le menu en rideau (voir style.css). */
 
 .admin-messages-list { display: grid; gap: 16px; }
 .admin-message { padding: 20px; border: 1px solid #E4EADF; border-radius: 8px; background: #fff; }
@@ -48,22 +35,7 @@
     padding: 14px 16px;
 }
 
-/* Navigation et tableau sur petit écran */
-@media (max-width: 1000px) {
-    .admin-header .nav-conteneur {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 14px 24px;
-    }
-
-    .admin-header .nav-principale,
-    .admin-header .nav-actions {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
-
+/* Tableau sur petit écran */
 @media (max-width: 700px) {
     .admin-header + main .tableau {
         display: block;

@@ -2239,3 +2239,54 @@ body:has(.cart-empty-page) .site-footer {
         white-space: nowrap;
     }
 }
+
+/* =====================================================
+   Menu en rideau (client ou administrateur connecté)
+   Placé en fin de fichier pour l'emporter sur les règles mobiles.
+   ===================================================== */
+.logo-zone { display: flex; align-items: center; gap: 14px; }
+.rideau-toggle { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 6px 14px; border: 0; border-radius: 30px; background: var(--vert-fonce); color: #fff; font: inherit; font-size: .9rem; font-weight: 600; cursor: pointer; transition: background .2s ease; }
+.rideau-toggle:hover { background: #1A3A29; }
+.rideau-toggle:focus-visible { outline: 3px solid var(--mangue); outline-offset: 2px; }
+.rideau-fleche { display: inline-block; transition: transform .3s ease; }
+.site-header.rideau-ouvert .rideau-fleche { transform: rotate(180deg); }
+
+.site-header--connecte .nav-conteneur { position: relative; }
+.site-header--connecte .nav-principale.nav-rideau {
+    position: absolute; top: calc(100% - 6px); left: 20px; z-index: 120;
+    display: flex; flex-direction: column; align-items: stretch; gap: 0;
+    width: 270px; padding: 10px 0 14px;
+    background: var(--vert-fonce); border-radius: 0 0 22px 22px;
+    box-shadow: 0 22px 45px rgba(20, 45, 32, .28);
+    clip-path: inset(0 0 100% 0); visibility: hidden;
+    transition: clip-path .45s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .45s;
+}
+.site-header--connecte.rideau-ouvert .nav-principale.nav-rideau {
+    clip-path: inset(0 0 0 0); visibility: visible;
+    transition: clip-path .45s cubic-bezier(.2, .8, .2, 1), visibility 0s;
+}
+.site-header--connecte .nav-rideau a,
+.site-header--connecte .nav-rideau .nav-logout-form button {
+    display: flex; align-items: center; width: 100%; min-height: 46px;
+    padding: 10px 24px; border: 0; border-top: 1px solid rgba(255, 255, 255, .12);
+    background: none; color: #fff; font: inherit; font-size: .98rem; font-weight: 500;
+    text-align: left; text-decoration: none; cursor: pointer;
+    transition: background .2s ease, padding-left .2s ease;
+}
+.site-header--connecte .nav-rideau a:first-child { border-top: 0; }
+.site-header--connecte .nav-rideau a:hover,
+.site-header--connecte .nav-rideau a:focus-visible,
+.site-header--connecte .nav-rideau .nav-logout-form button:hover,
+.site-header--connecte .nav-rideau .nav-logout-form button:focus-visible {
+    background: rgba(255, 255, 255, .1); color: var(--mangue); padding-left: 30px; outline: none;
+}
+.site-header--connecte .nav-rideau a.actif { color: var(--mangue); border-bottom: 0; font-weight: 700; }
+.site-header--connecte .nav-rideau .nav-logout-form { width: 100%; border-top: 0; }
+.site-header--connecte .nav-rideau .nav-logout-form button { color: #F6D77E; }
+
+@media (max-width: 768px) {
+    .site-header--connecte .nav-principale.nav-rideau { left: 16px; right: 16px; width: auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .site-header--connecte .nav-principale.nav-rideau, .rideau-fleche { transition: none; }
+}
