@@ -67,7 +67,7 @@ function preparer_selection_bowl($selection, array $config) {
         'Légumes' => $legumes ? implode(', ', array_map(static fn ($id) => $config['vegetables'][$id], $legumes)) : 'Aucun',
         'Sauce' => $config['sauces'][$sauce],
         'Extras' => array_values(array_filter([
-            $quinoaSelection ? 'Quinoa Sélection' : null,
+            $quinoaSelection ? 'Fonio Sélection' : null,
             $unitesSupplementaires ? $unitesSupplementaires . ' unité(s) supplémentaire(s)' : null,
         ])),
     ];

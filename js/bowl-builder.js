@@ -132,10 +132,10 @@
                     <span class="builder-extra-sparkles" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z"></path><path d="m19 15 .9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15Z"></path></svg>
                     </span>
-                    <span class="builder-extra-copy"><strong>Quinoa Sélection</strong><small>OFFERT</small></span>
+                    <span class="builder-extra-copy"><strong>Fonio Sélection</strong><small>OFFERT</small></span>
                     <button type="button" class="builder-extra-toggle${state.quinoaSelection ? ' is-on' : ''}"
                         data-builder-group="quinoaSelection" aria-pressed="${state.quinoaSelection}"
-                        aria-label="${state.quinoaSelection ? 'Retirer' : 'Ajouter'} Quinoa Sélection"><span></span></button>
+                        aria-label="${state.quinoaSelection ? 'Retirer' : 'Ajouter'} Fonio Sélection"><span></span></button>
                 </div>
                 <div class="builder-extra-card builder-extra-units">
                     <span class="builder-extra-copy"><strong>Unités supplémentaires</strong><small>+${formatPrice(config.extras.extra_unit_price)} / unité</small></span>

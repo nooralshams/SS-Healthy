@@ -48,7 +48,7 @@ Les transferts Wave et Orange Money ne sont pas traités par un prestataire de p
 | Medium | 3 000 F CFA |
 | Large | 3 500 F CFA |
 
-La sélection de quinoa est offerte. Une protéine premium ajoute 500 F CFA et chaque unité supplémentaire coûte 500 F CFA.
+La sélection de fonio est offerte. Une protéine premium ajoute 500 F CFA et chaque unité supplémentaire coûte 500 F CFA.
 
 ## Diagrammes et documentation
 

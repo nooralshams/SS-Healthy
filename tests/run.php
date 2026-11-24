@@ -165,7 +165,7 @@ try {
         'extraUnits' => 0,
     ];
     $bowl = preparer_selection_bowl($selection, $BOWL_CONFIG);
-    $assert($bowl['ok'] && $bowl['price'] === 2500, 'Le quinoa offert ou le prix Small est incorrect.');
+    $assert($bowl['ok'] && $bowl['price'] === 2500, 'Le fonio offert ou le prix Small est incorrect.');
     $assert($bowl['used_units'] === 3 && $bowl['available_units'] === 3, 'Le décompte d’unités Small est incorrect.');
 
     $overLimit = $selection;
