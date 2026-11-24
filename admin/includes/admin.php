@@ -20,6 +20,12 @@ function libelle_statut_commande($statut) {
     return $libelles[$statut] ?? $statut;
 }
 
+/** Libellés lisibles des modes de récupération */
+function libelle_mode_commande($mode) {
+    $libelles = ['sur_place' => 'Sur place', 'a_emporter' => 'À emporter', 'livraison' => 'Livraison'];
+    return $libelles[$mode] ?? $mode;
+}
+
 /** Libellés lisibles des statuts d'abonnements */
 function libelle_statut_abonnement($statut) {
     $libelles = [

@@ -121,7 +121,7 @@ if ($commandes) {
                             </td>
                             <td><?= e(date('d/m/Y H:i', strtotime($commande['date_commande']))) ?></td>
                             <td><?= e($commande['creneau']) ?></td>
-                            <td><?= e($commande['mode']) ?></td>
+                            <td><?= e(libelle_mode_commande($commande['mode'])) ?></td>
                             <td>
                                 <?= e(['especes' => 'Espèces', 'wave' => 'Wave', 'orange_money' => 'Orange Money'][$commande['mode_paiement']] ?? 'Espèces') ?>
                                 <?php if ($commande['statut'] === 'en_attente' && in_array($commande['mode_paiement'], ['wave', 'orange_money'], true)): ?>
@@ -155,7 +155,7 @@ if ($commandes) {
                                     <select name="statut" onchange="this.form.submit()">
                                         <?php foreach (array_merge([$commande['statut']], $TRANSITIONS[$commande['statut']] ?? []) as $statut): ?>
                                             <option value="<?= e($statut) ?>" <?= $commande['statut'] === $statut ? 'selected' : '' ?>>
-                                                <?= e($statut) ?>
+                                                <?= e(libelle_statut_commande($statut)) ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>

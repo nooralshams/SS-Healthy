@@ -1382,8 +1382,8 @@ body.builder-active .barre-mobile-actions { display: none; }
 .mode-paiement-option input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 .mode-paiement-carte { display: grid; min-height: 84px; grid-template-columns: 48px minmax(0, 1fr) auto; grid-template-rows: 1fr 1fr; align-items: center; gap: 0 12px; padding: 14px; border: 1.5px solid #E8EEE9; border-radius: 18px; background: #fff; transition: background .18s ease, border-color .18s ease, box-shadow .18s ease; }
 .mode-paiement-icone { display: grid; width: 46px; height: 46px; grid-row: 1 / 3; place-items: center; border-radius: 50%; background: #F2F4F3; color: #78837B; font-size: 1.4rem; font-weight: 800; }
-.mode-paiement-carte strong { align-self: end; color: var(--encre); font-family: 'Bricolage Grotesque', sans-serif; font-size: 1rem; }
-.mode-paiement-carte small { align-self: start; color: #758078; font-size: .8rem; }
+.mode-paiement-carte strong { grid-column: 2; grid-row: 1; align-self: end; color: var(--encre); font-family: 'Bricolage Grotesque', sans-serif; font-size: 1rem; }
+.mode-paiement-carte small { grid-column: 2; grid-row: 2; align-self: start; color: #758078; font-size: .8rem; }
 .mode-paiement-coche { display: none; grid-column: 3; grid-row: 1 / 3; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--vert-fonce); color: #fff; font-weight: 800; }
 .mode-paiement-option input:checked + .mode-paiement-carte { border-color: var(--vert-fonce); background: #ECFBF4; box-shadow: 0 8px 18px rgba(35,75,54,.08); }
 .mode-paiement-option input:checked + .mode-paiement-carte .mode-paiement-icone { background: var(--vert-fonce); color: #fff; }
