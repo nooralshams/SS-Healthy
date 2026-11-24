@@ -16,6 +16,11 @@ $plat_favori = $plats_vedette[0] ?? null;
 $image_favori = $plat_favori
     ? 'images/plats/' . $plat_favori['image']
     : '';
+// Formule d'abonnement la moins chère, pour l'accroche de la carte « Abonnement ».
+$formule_depart = $pdo->query(
+    'SELECT prix, duree_jours FROM formules_abonnement WHERE actif = 1 ORDER BY prix ASC LIMIT 1'
+)->fetch();
+
 $image_favori_disponible = $plat_favori
     && $plat_favori['image'] !== 'defaut.jpg'
     && file_exists($image_favori);
@@ -29,7 +34,6 @@ $image_favori_disponible = $plat_favori
             <p>Des plats équilibrés, préparés avec des produits locaux, pour prendre soin de vous sans renoncer au goût.</p>
             <div class="hero-actions">
                 <a href="menu.php" class="btn btn-plein">Découvrir le menu</a>
-                <a href="abonnements.php" class="btn btn-mangue hero-abonnement">S'abonner</a>
                 <a href="imc.php" class="btn btn-contour">Calculer mon IMC</a>
             </div>
         </div>
@@ -39,6 +43,18 @@ $image_favori_disponible = $plat_favori
                     <img src="images/sport.jpg" alt="Femme en mouvement pendant une course">
                 </div>
             </div>
+            <a href="abonnements.php" class="hero-carte-abonnement">
+                <span class="hero-carte-icone" aria-hidden="true">⚡</span>
+                <span class="hero-carte-texte">
+                    <strong>Vos repas de la semaine, sans y penser</strong>
+                    <?php if ($formule_depart): ?>
+                        <span>Abonnement dès <?= number_format((int) $formule_depart['prix'], 0, ',', ' ') ?> FCFA / <?= (int) $formule_depart['duree_jours'] ?> jours</span>
+                    <?php else: ?>
+                        <span>Découvrez nos formules d’abonnement</span>
+                    <?php endif; ?>
+                </span>
+                <span class="hero-carte-action">S’abonner <span aria-hidden="true">→</span></span>
+            </a>
         </div>
     </div>
 </section>
