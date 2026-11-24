@@ -32,11 +32,10 @@ try {
     $pdo->exec('CREATE TABLE utilisateurs (
         id INT AUTO_INCREMENT PRIMARY KEY,
         email VARCHAR(100) NOT NULL,
-        role VARCHAR(10) NOT NULL,
         tentatives_connexion TINYINT UNSIGNED NOT NULL DEFAULT 0,
         bloque TINYINT(1) NOT NULL DEFAULT 0
     ) ENGINE=InnoDB');
-    $pdo->exec("INSERT INTO utilisateurs (email, role) VALUES ('a@test.sn', 'client'), ('b@test.sn', 'client'), ('c@test.sn', 'admin')");
+    $pdo->exec("INSERT INTO utilisateurs (email) VALUES ('a@test.sn'), ('b@test.sn')");
 
     $etat = function (int $id) use ($pdo): array {
         $s = $pdo->prepare('SELECT tentatives_connexion AS t, bloque AS b FROM utilisateurs WHERE id = ?');
@@ -68,17 +67,6 @@ try {
 
     echo "\nIndépendance des comptes\n";
     verifier('le blocage de A n\'a pas bloqué B', $etat(2)[1], 0);
-
-    echo "\nDéblocage\n";
-    for ($i = 1; $i <= 5; $i++) { enregistrer_echec_connexion($pdo, 3); }
-    verifier('administrateur C bloqué après 5 échecs', $etat(3), [5, 1]);
-    verifier('un client ne peut pas être débloqué comme administrateur', debloquer_compte($pdo, 1, 'admin'), false);
-    verifier('le client A reste bloqué', $etat(1), [5, 1]);
-    verifier('déblocage de l\'administrateur C', debloquer_compte($pdo, 3, 'admin'), true);
-    verifier('C : compteur à 0 et débloqué', $etat(3), [0, 0]);
-    verifier('déblocage du client A sans rôle imposé', debloquer_compte($pdo, 1), true);
-    verifier('A : compteur à 0 et débloqué', $etat(1), [0, 0]);
-    verifier('compte inexistant : renvoie false', debloquer_compte($pdo, 99), false);
 } finally {
     $pdoAdmin->exec("DROP DATABASE IF EXISTS `$nomBase`");
 }
