@@ -178,6 +178,12 @@ require_once 'includes/header.php';
                 </div>
             <?php endif; ?>
         </div>
+
+        <aside class="avertissement-sante" role="note" aria-labelledby="titre-avertissement-sante">
+            <h2 id="titre-avertissement-sante">Information santé importante</h2>
+            <p>SS’Healthy ne pose aucun diagnostic et ne remplace pas un avis médical. L’IMC est un repère général : il ne tient compte ni de la masse musculaire, ni de l’âge, ni d’une grossesse.</p>
+            <p>Les plats à index glycémique faible proposés pour l’objectif « diabète » ne remplacent ni un traitement ni un suivi médical. En cas de diabète, de grossesse, de maladie chronique ou de perte de poids inexpliquée, demandez conseil à un médecin ou à un nutritionniste avant de changer votre alimentation.</p>
+        </aside>
     </div>
 </section>
 

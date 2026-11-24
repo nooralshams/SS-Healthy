@@ -1346,6 +1346,10 @@ body.builder-active .barre-mobile-actions { display: none; }
 .imc-tres-eleve { border-left-color: var(--rouge-doux); }
 .imc-reperes h2 { color: var(--vert-fonce); margin-bottom: 20px; }
 .imc-reperes p { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.avertissement-sante { margin-top: 24px; padding: 20px 24px; border-left: 5px solid var(--mangue); border-radius: 14px; background: #FFF8E6; color: #4A3B12; }
+.avertissement-sante h2 { margin-bottom: 8px; color: var(--vert-fonce); font-size: 1.1rem; }
+.avertissement-sante p { font-size: .95rem; line-height: 1.6; }
+.avertissement-sante p + p { margin-top: 8px; }
 .repere { width: 12px; height: 12px; border-radius: 50%; flex: 0 0 12px; }
 .repere-bas { background: var(--bleu-doux); }
 .repere-normal { background: var(--vert-vif); }
