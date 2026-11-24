@@ -63,7 +63,7 @@ $clients = $pdo->query(
                                 <?= e($client['email']) ?><br>
                                 <small><?= e($client['telephone'] ?: 'Tél. non renseigné') ?></small>
                             </td>
-                            <td><?= e($OBJECTIFS[$client['objectif']] ?? $client['objectif']) ?></td>
+                            <td><?= e(libelle_objectif($client['objectif'], $OBJECTIFS)) ?></td>
                             <td>
                                 <?php if ($client['dernier_imc'] !== null): ?>
                                     <strong><?= e(number_format((float) $client['dernier_imc'], 1, ',', '')) ?></strong>

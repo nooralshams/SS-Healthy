@@ -34,8 +34,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $erreur = 'Cette adresse e-mail est déjà utilisée.';
         } else {
             $hash = password_hash($mot_de_passe, PASSWORD_DEFAULT);
+            // Aucun objectif à l’inscription : il est choisi après le calcul de l’IMC (imc.php).
             $stmt = $pdo->prepare('INSERT INTO utilisateurs (prenom, nom, email, telephone, mot_de_passe, objectif, role)
-                VALUES (?, ?, ?, ?, ?, "maintien", "client")');
+                VALUES (?, ?, ?, ?, ?, NULL, "client")');
             $ok = $stmt->execute([$prenom, $nom, $email, $telephone, $hash]);
 
             if ($ok) {

@@ -11,7 +11,7 @@ USE zig_healthy_db;
 -- TABLE UTILISATEURS
 -- =====================================================
 -- Stocke les informations des clients et de l'administrateur.
--- Un utilisateur possède un objectif nutritionnel et un rôle.
+-- Un utilisateur possède un rôle ; son objectif nutritionnel est choisi après le calcul de son IMC.
 -- =====================================================
 CREATE TABLE utilisateurs (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -20,7 +20,7 @@ CREATE TABLE utilisateurs (
     email VARCHAR(100) NOT NULL UNIQUE,
     mot_de_passe VARCHAR(255) NOT NULL,
     telephone VARCHAR(20),
-    objectif ENUM('perte_gras','prise_masse','diabete','maintien') DEFAULT 'maintien',
+    objectif ENUM('perte_gras','prise_masse','diabete','maintien') NULL DEFAULT NULL COMMENT 'Défini après le calcul de l’IMC',
     role ENUM('client','admin') DEFAULT 'client',
     bloque TINYINT(1) NOT NULL DEFAULT 0 COMMENT '1 = compte bloqué',
     tentatives_connexion TINYINT UNSIGNED NOT NULL DEFAULT 0,

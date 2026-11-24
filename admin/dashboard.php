@@ -78,7 +78,7 @@ $dernieres_commandes = $pdo->query(
             <tbody>
                 <?php foreach ($repartition_commandes as $ligne): ?>
                     <tr>
-                        <td><?= e($OBJECTIFS[$ligne['objectif']] ?? $ligne['objectif']) ?></td>
+                        <td><?= e(libelle_objectif($ligne['objectif'], $OBJECTIFS)) ?></td>
                         <td><?= (int) $ligne['nombre'] ?></td>
                     </tr>
                 <?php endforeach; ?>

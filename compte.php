@@ -24,32 +24,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'profi
     $telephone = trim($_POST['telephone'] ?? '');
     $objectif = $_POST['objectif'] ?? '';
 
+    // L'objectif ne peut être choisi qu'après l'enregistrement d'un IMC (imc.php).
+    $stmt = $pdo->prepare('SELECT imc FROM mesures_imc WHERE utilisateur_id = ? ORDER BY date_mesure DESC LIMIT 1');
+    $stmt->execute([$_SESSION['utilisateur_id']]);
+    $dernier_imc_profil = $stmt->fetchColumn();
+    $imc_enregistre = $dernier_imc_profil !== false;
+
     if ($prenom === '' || $nom === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $erreur = 'Veuillez renseigner un prénom, un nom et un e-mail valides.';
-    } elseif (!array_key_exists($objectif, $OBJECTIFS)) {
-        $erreur = 'Veuillez choisir un objectif valide.';
+    } elseif ($imc_enregistre && !in_array($objectif, objectifs_autorises((float) $dernier_imc_profil), true)) {
+        $erreur = 'Cet objectif n’est pas compatible avec votre dernier IMC. Choisissez un objectif autorisé.';
     } else {
-        $stmt = $pdo->prepare('SELECT imc FROM mesures_imc WHERE utilisateur_id = ? ORDER BY date_mesure DESC LIMIT 1');
-        $stmt->execute([$_SESSION['utilisateur_id']]);
-        $dernier_imc_profil = $stmt->fetchColumn();
-        $objectifs_profil = $dernier_imc_profil !== false
-            ? objectifs_autorises((float) $dernier_imc_profil)
-            : array_keys($OBJECTIFS);
+        $stmt = $pdo->prepare('SELECT id FROM utilisateurs WHERE email = ? AND id != ?');
+        $stmt->execute([$email, $_SESSION['utilisateur_id']]);
 
-        if (!in_array($objectif, $objectifs_profil, true)) {
-            $erreur = 'Cet objectif n’est pas compatible avec votre dernier IMC. Choisissez un objectif autorisé.';
-        } else {
-            $stmt = $pdo->prepare('SELECT id FROM utilisateurs WHERE email = ? AND id != ?');
-            $stmt->execute([$email, $_SESSION['utilisateur_id']]);
-        }
-
-        if ($erreur === '' && $stmt->fetch()) {
+        if ($stmt->fetch()) {
             $erreur = 'Cette adresse e-mail est déjà utilisée par un autre compte.';
-        } elseif ($erreur === '') {
+        } elseif ($imc_enregistre) {
             $stmt = $pdo->prepare(
                 'UPDATE utilisateurs SET prenom = ?, nom = ?, email = ?, telephone = ?, objectif = ? WHERE id = ?'
             );
             $stmt->execute([$prenom, $nom, $email, $telephone, $objectif, $_SESSION['utilisateur_id']]);
+        } else {
+            // Sans IMC enregistré, l'objectif reste non défini : seules les informations personnelles changent.
+            $stmt = $pdo->prepare(
+                'UPDATE utilisateurs SET prenom = ?, nom = ?, email = ?, telephone = ? WHERE id = ?'
+            );
+            $stmt->execute([$prenom, $nom, $email, $telephone, $_SESSION['utilisateur_id']]);
+        }
+
+        if ($erreur === '') {
             $_SESSION['prenom'] = $prenom;
             $_SESSION['nom'] = $nom;
             $_SESSION['email'] = $email;
@@ -70,9 +74,8 @@ if (!$utilisateur) {
 $stmt = $pdo->prepare('SELECT imc FROM mesures_imc WHERE utilisateur_id = ? ORDER BY date_mesure DESC LIMIT 1');
 $stmt->execute([$_SESSION['utilisateur_id']]);
 $dernier_imc_profil = $stmt->fetchColumn();
-$objectifs_profil = $dernier_imc_profil !== false
-    ? objectifs_autorises((float) $dernier_imc_profil)
-    : array_keys($OBJECTIFS);
+$imc_enregistre_profil = $dernier_imc_profil !== false;
+$objectifs_profil = $imc_enregistre_profil ? objectifs_autorises((float) $dernier_imc_profil) : [];
 
 // Historique des commandes et statut de leur préparation.
 $stmt = $pdo->prepare(
@@ -136,16 +139,24 @@ require_once 'includes/header.php';
                         <input id="telephone" name="telephone" type="text" maxlength="20" value="<?= e($utilisateur['telephone']) ?>">
                     </div>
                     <div class="champ">
-                        <label for="objectif">Objectif nutritionnel</label>
-                        <select id="objectif" name="objectif" required>
-                            <?php if (!in_array($utilisateur['objectif'], $objectifs_profil, true)): ?>
-                                <option value="" selected disabled>Votre objectif actuel est incompatible avec votre IMC</option>
-                            <?php endif; ?>
-                            <?php foreach ($objectifs_profil as $cle): ?>
-                                <?php $libelle = $OBJECTIFS[$cle]; ?>
-                                <option value="<?= e($cle) ?>" <?= $utilisateur['objectif'] === $cle ? 'selected' : '' ?>><?= e($libelle) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <?php if ($imc_enregistre_profil): ?>
+                            <label for="objectif">Objectif nutritionnel</label>
+                            <select id="objectif" name="objectif" required>
+                                <?php if (!in_array($utilisateur['objectif'], $objectifs_profil, true)): ?>
+                                    <option value="" selected disabled><?= $utilisateur['objectif'] === null ? 'Choisissez votre objectif' : 'Votre objectif actuel est incompatible avec votre IMC' ?></option>
+                                <?php endif; ?>
+                                <?php foreach ($objectifs_profil as $cle): ?>
+                                    <?php $libelle = $OBJECTIFS[$cle]; ?>
+                                    <option value="<?= e($cle) ?>" <?= $utilisateur['objectif'] === $cle ? 'selected' : '' ?>><?= e($libelle) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else: ?>
+                            <span class="champ-libelle">Objectif nutritionnel</span>
+                            <p class="objectif-a-definir">
+                                À définir après le calcul de votre IMC.
+                                <a href="imc.php">Calculer mon IMC</a>
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-plein">Enregistrer mes informations</button>

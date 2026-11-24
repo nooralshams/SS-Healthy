@@ -1133,6 +1133,9 @@ body.builder-active .barre-mobile-actions { display: none; }
 .carte-formulaire { background: var(--blanc); border-radius: 18px; padding: 34px; max-width: 480px; margin: 40px auto; }
 .champ { margin-bottom: 18px; }
 .champ label { display: block; font-weight: 600; margin-bottom: 6px; font-size: .92rem; }
+.champ .champ-libelle { display: block; font-weight: 600; margin-bottom: 6px; font-size: .92rem; }
+.objectif-a-definir { padding: 12px 14px; border-radius: 10px; background: #FFF8E6; color: #4A3B12; font-size: .92rem; }
+.objectif-a-definir a { color: var(--vert-fonce); font-weight: 700; }
 .champ input, .champ select, .champ textarea {
     width: 100%; padding: 11px 14px; border: 1.5px solid #D4DCCE; border-radius: 10px;
     font-family: inherit; font-size: .95rem; background: #FBFCFA;

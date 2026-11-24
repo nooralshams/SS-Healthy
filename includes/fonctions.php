@@ -109,3 +109,11 @@ function badge_objectif($objectif, $OBJECTIFS) {
     $classe = $classes[$objectif] ?? 'badge-maintien';
     return '<span class="badge ' . $classe . '">' . e($OBJECTIFS[$objectif] ?? $objectif) . '</span>';
 }
+
+/** Libellé d'un objectif ; « Non défini » tant que le client n'a pas enregistré d'IMC. */
+function libelle_objectif($objectif, array $OBJECTIFS): string {
+    if ($objectif === null || $objectif === '') {
+        return 'Non défini';
+    }
+    return $OBJECTIFS[$objectif] ?? (string) $objectif;
+}
