@@ -62,7 +62,7 @@ Le plat 8 (Crevettes, Patate Douce & Asperges) est à la limite : −29,6 %.
 
 ## Point 4 — Image de la « Salade d'aubergines méditerranéenne » (id 33)
 
-**Constat.** Le plat utilise `images/plats/plat_fe72e3c18e3eaa00b37690d5e376ed17.jpg`, nom donné par l'envoi depuis l'admin. Le fichier `images/plats/aubergine.jpeg`, qui n'est utilisé par aucun plat, est probablement la copie d'origine. Les deux fichiers ont été ajoutés au dépôt (privé) à la demande de Salma. Aucune image du menu n'a de source indiquée dans le projet.
+**Constat.** Le plat utilise `images/plats/plat_fe72e3c18e3eaa00b37690d5e376ed17.jpg`, nom donné par l'envoi depuis l'admin. Le fichier `images/plats/aubergine.jpeg`, qui n'est utilisé par aucun plat, est probablement la copie d'origine. Les deux fichiers ont été ajoutés au dépôt (privé) à la demande de Salma. Aucune image du menu n'a de source indiquée dans le projet. Salma précise que toutes les photos et toutes les recettes viennent de Pinterest : la colonne source porte « Pinterest » pour les 27 plats, avec le site d'origine à retrouver.
 
 **Ce qui a été fait.** Création de `docs/credits_images.md`, qui recense les 27 plats, `images/sport.jpg` et les fichiers non utilisés. Auteur, lien et licence sont marqués [À COMPLÉTER PAR SALMA]. Le fichier signale aussi un problème de casse : `Balls.jpeg` et `Shrimp.jpeg` en base, contre `balls.jpeg` et `shrimp.jpeg` sur le disque. Ces deux images ne s'afficheraient pas sur un hébergeur Linux.
 
