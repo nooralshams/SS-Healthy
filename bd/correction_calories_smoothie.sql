@@ -1,0 +1,37 @@
+-- =====================================================
+-- Correction des valeurs nutritionnelles du plat id 20
+-- « Smoothie Cajou, Amande & Épices Douces »
+-- =====================================================
+-- ÉTAT : MODÈLE NON EXÉCUTABLE. La requête est commentée volontairement.
+--
+-- Constat (lecture de zig_healthy_db, 25/11/2026) :
+--   calories 1650 kcal, protéines 42 g, glucides 20 g, lipides 135 g, prix 1000 FCFA.
+--   Estimation P×4 + G×4 + L×9 = 168 + 80 + 1215 = 1463 kcal (écart 13 %).
+--   Les calories suivent donc les macros, mais les macros sont invraisemblables
+--   pour un smoothie (135 g de lipides).
+--
+-- Pourquoi aucune valeur n'est proposée :
+--   la base ne contient pas les quantités des ingrédients. La description cite
+--   banane, noix de cajou, amande, graines de chia, cannelle, muscade et vanille,
+--   sans grammage. Calculer sans ces quantités reviendrait à inventer des chiffres.
+--
+-- À COMPLÉTER PAR SALMA avant exécution :
+--   [À COMPLÉTER PAR SALMA : quantités en grammes de chaque ingrédient, ou lien de la recette d'origine]
+--   [À COMPLÉTER PAR SALMA : source des valeurs nutritionnelles, par exemple la table Ciqual de l'ANSES]
+--
+-- Ensuite seulement : remplacer les quatre valeurs, retirer les « -- » des
+-- lignes ci-dessous, puis exécuter ce fichier dans phpMyAdmin sur zig_healthy_db.
+
+-- USE zig_healthy_db;
+-- UPDATE plats
+--    SET calories = [À COMPLÉTER],   -- en kcal, entier
+--        proteines = [À COMPLÉTER],  -- en g
+--        glucides = [À COMPLÉTER],   -- en g
+--        lipides = [À COMPLÉTER]     -- en g
+--  WHERE id = 20
+--    AND nom = 'Smoothie Cajou, Amande & Épices Douces';
+--
+-- Vérification après exécution :
+-- SELECT id, nom, calories, proteines, glucides, lipides,
+--        ROUND(proteines * 4 + glucides * 4 + lipides * 9) AS estimation_kcal
+--   FROM plats WHERE id = 20;

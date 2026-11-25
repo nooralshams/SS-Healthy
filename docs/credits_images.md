@@ -10,7 +10,7 @@ Statuts utilisés :
 
 | Plat (id) | Fichier | Auteur | Source / lien | Licence | Statut |
 |---|---|---|---|---|---|
-| Salade d'aubergines méditerranéenne aux herbes fraîches et chips de pita au za'atar (33) | `plat_fe72e3c18e3eaa00b37690d5e376ed17.jpg` | [À COMPLÉTER PAR SALMA] | Pinterest — [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | À remplacer |
+| Salade d'aubergines méditerranéenne aux herbes fraîches et chips de pita au za'atar (33) | `plat_fe72e3c18e3eaa00b37690d5e376ed17.jpg` | [À COMPLÉTER PAR SALMA] | Pinterest — [À COMPLÉTER PAR SALMA : URL exacte de la source] | [À COMPLÉTER PAR SALMA] | À remplacer |
 | Duo Avocat & Tomate sur Œufs Brouillés (2) | `omelette.jpeg` | [À COMPLÉTER PAR SALMA] | Pinterest — [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | À remplacer |
 | Le Bowl Gourmand Poulet & Tzatziki (3) | `blanc de poulet grillé.jpeg` | [À COMPLÉTER PAR SALMA] | Pinterest — [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | À remplacer |
 | Poisson braisé (4) | `poisson braisé.jpeg` | [À COMPLÉTER PAR SALMA] | Pinterest — [À COMPLÉTER PAR SALMA] | [À COMPLÉTER PAR SALMA] | À remplacer |

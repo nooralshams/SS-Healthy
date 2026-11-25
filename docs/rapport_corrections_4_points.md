@@ -36,7 +36,7 @@ Branche `corrections-encadreur`. Les tests passent après chaque point : `test_f
 
 Les calories sont cohérentes avec les macros, mais les macros elles-mêmes sont invraisemblables pour un smoothie : 135 g de lipides correspondent à environ 300 g de noix de cajou. Recalculer à partir des macros donnerait 1463 kcal, ce qui serait tout aussi faux.
 
-**Ce qui a été fait.** Rien n'a été modifié. `bd/correction_calories_smoothie.sql` n'est pas créé : il faut d'abord les vraies valeurs.
+**Ce qui a été fait.** La base n'a pas été modifiée. La base ne contient pas les quantités des ingrédients : la description cite banane, cajou, amande, chia, cannelle, muscade et vanille, sans grammage. Le calcul à partir des ingrédients est donc impossible sans inventer. `bd/correction_calories_smoothie.sql` est créé comme **modèle commenté** (aucune requête active), avec le constat, la requête `UPDATE` ciblée sur l'id 20 et la requête de vérification. Il sera complété et exécuté quand les quantités seront connues.
 
 **Autres plats dont l'écart dépasse 30 %** (liste seulement, rien de modifié) :
 
