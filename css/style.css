@@ -2496,3 +2496,7 @@ a.ec-stat:hover, a.ec-stat:focus-visible { transform: translateY(-5px); box-shad
 
     .abonnement-intro-block h2 { font-size: clamp(2.4rem, 12vw, 4rem); overflow-wrap: normal; }
 }
+
+/* Admin : photo actuelle dans le formulaire de modification d’un plat */
+.admin-photo-actuelle { display: block; width: 120px; height: 90px; object-fit: cover; margin-bottom: 10px; border-radius: 12px; border: 1px solid #E6F1EA; }
+.admin-aide { display: block; margin: 6px 0 0; color: #65716D; font-size: .85rem; }

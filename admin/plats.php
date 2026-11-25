@@ -158,7 +158,7 @@ $categories = $pdo->query('SELECT id, nom FROM categories ORDER BY nom')->fetchA
 
 $plats = $pdo->query(
     'SELECT p.id, p.categorie_id, p.nom, p.description, p.prix, p.calories,
-            p.proteines, p.glucides, p.lipides, p.ig_faible, p.disponible, c.nom AS categorie
+            p.proteines, p.glucides, p.lipides, p.ig_faible, p.disponible, p.image, c.nom AS categorie
      FROM plats p
      JOIN categories c ON c.id = p.categorie_id
      ORDER BY c.nom, p.nom'
@@ -302,7 +302,18 @@ $libelles_objectifs_admin = array_merge($OBJECTIFS, ['diabete' => 'Objectif Diab
                                         </select>
                                     </div>
                                     <div class="champ"><label>Description</label><textarea name="description" rows="3"><?= e($plat['description']) ?></textarea></div>
-                                    <div class="champ"><label>Nouvelle image (JPG, PNG ou WebP, 2 Mo maximum)</label><input type="file" name="image" accept="image/jpeg,image/png,image/webp"></div>
+                                    <div class="champ">
+                                        <span class="champ-libelle">Photo actuelle</span>
+                                        <?php $photo_actuelle = '../images/plats/' . $plat['image']; ?>
+                                        <?php if ($plat['image'] && $plat['image'] !== 'defaut.jpg' && file_exists($photo_actuelle)): ?>
+                                            <img class="admin-photo-actuelle" src="<?= e($photo_actuelle) ?>" alt="Photo actuelle de <?= e($plat['nom']) ?>">
+                                        <?php else: ?>
+                                            <p class="admin-aide">Aucune photo : l’image par défaut est affichée.</p>
+                                        <?php endif; ?>
+                                        <label>Remplacer la photo (JPG, PNG ou WebP, 2 Mo maximum)</label>
+                                        <input type="file" name="image" accept="image/jpeg,image/png,image/webp">
+                                        <small class="admin-aide">Laissez vide pour garder la photo actuelle.</small>
+                                    </div>
                                     <div class="admin-grille-2">
                                         <div class="champ"><label>Prix (FCFA) *</label><input type="number" name="prix" value="<?= (int) $plat['prix'] ?>" min="0" required></div>
                                         <div class="champ"><label>Calories *</label><input type="number" name="calories" value="<?= (int) $plat['calories'] ?>" min="0" required></div>
