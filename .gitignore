@@ -2,3 +2,19 @@ vendor/
 .env
 hash.php
 *.log
+
+# Secrets et configuration locale
+.env.*
+includes/config.local.php
+
+# Exports et sauvegardes de base (peuvent contenir des données clients)
+*.sql.gz
+*.dump
+dumps/
+bd/export*.sql
+bd/*_sauvegarde*.sql
+
+# Fichiers temporaires
+*.tmp
+.DS_Store
+Thumbs.db
