@@ -19,13 +19,21 @@ SS’Healthy est une application web PHP/MySQL de commande de repas. Elle compre
    - `bd/migration_bowls_personnalises.sql`
    - `bd/migration_paiement_contact.sql`
    - `bd/migration_reinitialisation_mot_de_passe.sql`
-5. Vérifier la configuration locale de la base dans `includes/config.php`. Ne pas publier de mots de passe, comptes de démonstration ni paramètres SMTP.
+5. Vérifier la configuration locale de la base dans `includes/config.php`. Elle lit les variables d’environnement décrites dans `includes/config.example.php` et, à défaut, utilise WAMP en local (root sans mot de passe, port 3308). Ne pas publier de mots de passe, comptes de démonstration ni paramètres SMTP.
 6. Définir le mot de passe du compte administrateur : le script SQL ne contient aucun mot de passe, et le compte admin importé ne peut pas se connecter tant que cette étape n’est pas faite.
    - Générer un hash en local (saisir le mot de passe au clavier, puis Entrée) :
      `php -r "echo password_hash(trim(fgets(STDIN)), PASSWORD_DEFAULT), PHP_EOL;"`
    - Dans phpMyAdmin, exécuter `UPDATE utilisateurs SET mot_de_passe = '<hash généré>' WHERE role = 'admin';`
    - Ne conserver ce hash dans aucun fichier du projet.
 7. Ouvrir `http://localhost:8080/zig_healthy/`.
+
+### Comptes de démonstration
+
+Le dépôt ne contient aucun compte de démonstration prêt à l’emploi, et donc aucun mot de passe. Pour une démonstration :
+
+- **Client** : créer un compte depuis `inscription.php` avec une identité fictive et une adresse en `.invalid` (par exemple `client.demo@exemple.invalid`), puis enregistrer un IMC dans « Mon compte » pour choisir l’objectif.
+- **Administrateur** : utiliser le compte admin importé, après avoir défini son mot de passe à l’étape 6.
+- Choisir les mots de passe au moment de la démonstration et ne les écrire dans aucun fichier du projet.
 
 Les scripts `migration_categories_repas.sql`, `migration_blocage.sql` et `migration_abonnements.sql` concernent des bases historiques. Ne les appliquez pas à l’installation fraîche ci-dessus sans vérifier leur compatibilité avec le schéma déjà importé.
 
